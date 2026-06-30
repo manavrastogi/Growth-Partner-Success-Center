@@ -1,0 +1,78 @@
+/* ============================================================
+   GlobalLinker — Color Tokens
+   Base palette + semantic aliases.
+   ============================================================ */
+:root {
+  /* ---- Brand core ---- */
+  --gl-blue: #1372f6;          /* Primary brand blue */
+  --gl-blue-600: #0f5ed1;      /* Hover/pressed blue */
+  --gl-blue-700: #0c4ba6;
+  --gl-blue-50: #ebf1fa;       /* Tinted blue surface */
+  --gl-blue-100: #dbe8fc;
+
+  --gl-orange: #f97015;        /* Accent orange — CTAs, badges, highlights */
+  --gl-orange-600: #e25f08;    /* Hover/pressed orange */
+  --gl-orange-700: #c14f05;
+  --gl-orange-50: #fcf0e8;     /* Tinted orange surface */
+  --gl-orange-100: #fde2d2;
+
+  /* ---- Neutrals / ink ---- */
+  --gl-navy: #021450;          /* Deepest background navy (brand) */
+  --gl-navy-800: #021450;      /* Hero / dark surfaces */
+  --gl-ink: #1e293b;           /* Default text ink (headings / high-contrast body) */
+  --gl-slate-700: #334155;
+  --gl-slate-600: #475569;     /* Secondary body text */
+  --gl-slate-500: #64748b;     /* Muted / captions */
+  --gl-slate-400: #94a3b8;
+  --gl-slate-300: #cbd5e1;     /* Borders on dark */
+  --gl-slate-200: #e2e8f0;     /* Default card border */
+  --gl-slate-100: #f1f5f9;     /* Subtle fill */
+  --gl-slate-50: #f8fafc;      /* Page background */
+  --gl-white: #ffffff;
+
+  /* ---- Semantic status ---- */
+  --gl-success: #16a34a;
+  --gl-success-50: #ecfdf5;
+  --gl-warning: #d97706;
+  --gl-danger: #dc2626;
+  --gl-danger-50: #fef2f2;
+  --gl-star: #f5a623;          /* Rating gold */
+
+  /* ---- Signature gradient ---- */
+  --gl-gradient-subtle: linear-gradient(135deg, #ebf1fa 0%, #fcf0e8 100%); /* @kind color */
+  --gl-gradient-navy: linear-gradient(135deg, #021450 0%, #021450 100%); /* @kind color */
+
+  /* ============================================================
+     SEMANTIC ALIASES
+     ============================================================ */
+  /* Text */
+  --text-strong: var(--gl-ink);        /* Headings, high-contrast */
+  --text-body: var(--gl-slate-600);    /* Body copy */
+  --text-muted: var(--gl-slate-500);   /* Captions, meta */
+  --text-accent: var(--gl-blue);       /* Inline emphasis in headings */
+  --text-accent-warm: var(--gl-orange);
+  --text-on-dark: var(--gl-white);
+  --text-on-dark-muted: var(--gl-slate-300);
+  --text-link: var(--gl-blue);
+
+  /* Surfaces */
+  --surface-page: var(--gl-slate-50);
+  --surface-card: var(--gl-white);
+  --surface-subtle: var(--gl-slate-100);
+  --surface-tint-blue: var(--gl-blue-50);
+  --surface-tint-orange: var(--gl-orange-50);
+  --surface-dark: var(--gl-navy);
+  --surface-dark-soft: var(--gl-navy-800);
+
+  /* Lines */
+  --border-card: var(--gl-slate-200);
+  --border-strong: var(--gl-slate-300);
+  --border-on-dark: rgba(255, 255, 255, 0.12);
+
+  /* Interactive */
+  --action-primary: var(--gl-orange);        /* Primary CTA */
+  --action-primary-hover: var(--gl-orange-600);
+  --action-secondary: var(--gl-blue);        /* Links / secondary action */
+  --action-secondary-hover: var(--gl-blue-600);
+  --focus-ring: rgba(19, 114, 246, 0.4);
+}
