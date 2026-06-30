@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/globallinker-design-system-9deb5fcd-a89a-4eb9-beaf-25a4b68e9e24/tokens/fonts.css">
+<link rel="stylesheet" href="_ds/globallinker-design-system-9deb5fcd-a89a-4eb9-beaf-25a4b68e9e24/tokens/colors.css">
+<link rel="stylesheet" href="_ds/globallinker-design-system-9deb5fcd-a89a-4eb9-beaf-25a4b68e9e24/tokens/typography.css">
+<link rel="stylesheet" href="_ds/globallinker-design-system-9deb5fcd-a89a-4eb9-beaf-25a4b68e9e24/tokens/spacing.css">
+<link rel="stylesheet" href="_ds/globallinker-design-system-9deb5fcd-a89a-4eb9-beaf-25a4b68e9e24/tokens/effects.css">
+<link rel="stylesheet" href="_ds/globallinker-design-system-9deb5fcd-a89a-4eb9-beaf-25a4b68e9e24/styles.css">
+<script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.js"></script>
+<script src="_ds/globallinker-design-system-9deb5fcd-a89a-4eb9-beaf-25a4b68e9e24/_ds_bundle.js"></script>
+<script src="content.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); background: var(--gl-slate-50); color: var(--gl-ink); -webkit-font-smoothing: antialiased; }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; border: 2px solid transparent; background-clip: content-box; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  @keyframes glToastIn { from { opacity: 0; transform: translate(-50%, 12px); } to { opacity: 1; transform: translate(-50%, 0); } }
+  @keyframes glFade { from { transform: translateY(9px); } to { transform: translateY(0); } }
+  @keyframes glSpin { to { transform: rotate(360deg); } }
+  .gl-fade { animation: glFade .3s cubic-bezier(0.16,1,0.3,1); }
+  .gl-hidescroll::-webkit-scrollbar { display: none; }
+</style>
+</helmet>
+
+<div style="display:flex; min-height:100vh; width:100%; background:var(--gl-slate-50);">
+
+  <!-- ============ DESKTOP SIDEBAR ============ -->
+  <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+    <aside style="width:260px; flex-shrink:0; height:100vh; position:sticky; top:0; background:#fff; border-right:1px solid var(--gl-slate-200); display:flex; flex-direction:column; padding:22px 16px;">
+      <div style="display:flex; flex-direction:column; gap:8px; padding:4px 8px 22px 8px;">
+        <img src="assets/globallinker-logo.svg" alt="GlobalLinker" style="height:25px; width:auto; align-self:flex-start;" />
+        <div style="font-size:11px; font-weight:700; color:var(--gl-blue); text-transform:uppercase; letter-spacing:0.07em;">Growth Partner Success Center</div>
+      </div>
+      <nav style="display:flex; flex-direction:column; gap:3px; flex:1; overflow-y:auto;" class="gl-hidescroll">
+        <sc-for list="{{ sidebarItems }}" as="it" hint-placeholder-count="9">
+          <button onClick="{{ it.onClick }}" style="display:flex; align-items:center; gap:12px; width:100%; padding:11px 12px; border:none; border-radius:11px; cursor:pointer; font-family:var(--font-sans); font-size:14px; font-weight:600; text-align:left; transition:background .15s, color .15s; background:{{ it.bg }}; color:{{ it.fg }};">
+            <span style="display:inline-flex; color:{{ it.iconColor }};"><x-import component-from-global-scope="GLIcon" name="{{ it.icon }}" size="19" hint-size="19px,19px"></x-import></span>
+            <span style="flex:1;">{{ it.label }}</span>
+            <sc-if value="{{ it.badge }}"><span style="font-size:11px; font-weight:700; background:var(--gl-slate-100); color:var(--gl-slate-500); padding:2px 7px; border-radius:999px;">{{ it.badge }}</span></sc-if>
+          </button>
+        </sc-for>
+      </nav>
+      <div style="margin-top:14px; padding:14px; border-radius:14px; background:var(--gl-navy); color:#fff;">
+        <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.07em; color:#9db4ec;">Done-for-Me Setup</div>
+        <div style="font-size:18px; font-weight:800; margin-top:4px;">{{ price }}</div>
+        <div style="font-size:12px; color:rgba(255,255,255,.65); margin-top:2px;">Always use your own checkout link.</div>
+      </div>
+    </aside>
+  </sc-if>
+
+  <!-- ============ MAIN COLUMN ============ -->
+  <div ref="{{ mainRef }}" style="flex:1; min-width:0; height:100vh; overflow-y:auto; position:relative;">
+
+    <!-- sticky search bar -->
+    <header style="position:sticky; top:0; z-index:30; background:rgba(248,250,252,.86); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-bottom:1px solid var(--gl-slate-200); padding:12px 16px;">
+      <div style="max-width:1080px; margin:0 auto; display:flex; align-items:center; gap:12px;">
+        <sc-if value="{{ isMobile }}">
+          <img src="assets/globallinker-logo.svg" alt="GlobalLinker" style="height:17px; width:auto; flex-shrink:0;" />
+        </sc-if>
+        <div style="flex:1; display:flex; align-items:center; gap:10px; background:#fff; border:1px solid var(--gl-slate-200); border-radius:12px; padding:0 12px; height:46px; box-shadow:var(--shadow-xs);">
+          <span style="display:inline-flex; color:var(--gl-slate-400);"><x-import component-from-global-scope="GLIcon" name="Search" size="19" hint-size="19px,19px"></x-import></span>
+          <input value="{{ query }}" onChange="{{ onQuery }}" placeholder="Search scripts, objections, FAQs, websites…" style="flex:1; border:none; outline:none; background:transparent; font-family:var(--font-sans); font-size:15px; color:var(--gl-ink); min-width:0;" />
+          <sc-if value="{{ hasQuery }}">
+            <button onClick="{{ clearQuery }}" style="display:inline-flex; align-items:center; justify-content:center; border:none; background:var(--gl-slate-100); color:var(--gl-slate-500); width:26px; height:26px; border-radius:999px; cursor:pointer; flex-shrink:0;"><x-import component-from-global-scope="GLIcon" name="X" size="15" hint-size="15px,15px"></x-import></button>
+          </sc-if>
+        </div>
+      </div>
+    </header>
+
+    <main style="max-width:1080px; margin:0 auto; padding:22px 16px 110px 16px;">
+
+      <!-- ============ SEARCH RESULTS ============ -->
+      <sc-if value="{{ hasQuery }}">
+        <div class="gl-fade">
+          <div style="font-size:13px; font-weight:600; color:var(--gl-slate-500); margin-bottom:14px;">{{ resultLabel }}</div>
+          <sc-if value="{{ noResults }}">
+            <div style="text-align:center; padding:60px 20px; color:var(--gl-slate-500);">
+              <div style="display:inline-flex; color:var(--gl-slate-300);"><x-import component-from-global-scope="GLIcon" name="SearchX" size="48" hint-size="48px,48px"></x-import></div>
+              <p style="font-size:16px; font-weight:600; color:var(--gl-slate-600); margin:14px 0 4px;">No matches found</p>
+              <p style="font-size:14px; margin:0;">Try “discount”, “IndiaMART”, “schema” or “timeline”.</p>
+            </div>
+          </sc-if>
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <sc-for list="{{ results }}" as="r" hint-placeholder-count="5">
+              <button onClick="{{ r.onClick }}" style="display:flex; align-items:flex-start; gap:13px; width:100%; text-align:left; background:#fff; border:1px solid var(--gl-slate-200); border-radius:14px; padding:14px 15px; cursor:pointer; transition:box-shadow .15s, transform .15s;" style-hover="box-shadow:var(--shadow-card-hover); transform:translateY(-1px);">
+                <span style="display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:10px; flex-shrink:0; background:{{ r.chipBg }}; color:{{ r.chipFg }};"><x-import component-from-global-scope="GLIcon" name="{{ r.icon }}" size="19" hint-size="19px,19px"></x-import></span>
+                <span style="flex:1; min-width:0;">
+                  <span style="display:flex; align-items:center; gap:8px;">
+                    <span style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:{{ r.chipFg }};">{{ r.kind }}</span>
+                    <span style="font-size:11px; color:var(--gl-slate-400);">{{ r.sub }}</span>
+                  </span>
+                  <span style="display:block; font-size:15px; font-weight:700; color:var(--gl-ink); margin-top:3px; line-height:1.3;">{{ r.title }}</span>
+                  <span style="display:block; font-size:13px; color:var(--gl-slate-500); margin-top:2px; line-height:1.45; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ r.snippet }}</span>
+                </span>
+                <span style="display:inline-flex; color:var(--gl-slate-300); margin-top:8px;"><x-import component-from-global-scope="GLIcon" name="ChevronRight" size="18" hint-size="18px,18px"></x-import></span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ============ HOME ============ -->
+      <sc-if value="{{ showHome }}">
+        <div class="gl-fade">
+          <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:26px;">
+            <span style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--gl-blue);">Growth Partner Success Center</span>
+            <h1 style="margin:0; font-size:var(--heroSize); font-weight:800; letter-spacing:-0.025em; line-height:1.08; color:var(--gl-ink);">{{ greeting }}</h1>
+            <p style="margin:2px 0 0; font-size:16px; line-height:1.55; color:var(--gl-slate-600); max-width:620px;">Your daily companion for live customer conversations. Find the right script, demo or answer in seconds — then close with confidence.</p>
+          </div>
+
+          <h2 style="margin:0 0 14px; font-size:18px; font-weight:800; color:var(--gl-ink); letter-spacing:-0.01em;">What would you like help with today?</h2>
+          <div style="display:grid; grid-template-columns:{{ qaCols }}; gap:13px; margin-bottom:30px;">
+            <sc-for list="{{ quickActions }}" as="q" hint-placeholder-count="6">
+              <button onClick="{{ q.onClick }}" class="gl-fade" style="display:flex; flex-direction:column; align-items:flex-start; gap:12px; text-align:left; background:#fff; border:1px solid var(--gl-slate-200); border-radius:18px; padding:20px; cursor:pointer; transition:box-shadow .18s, transform .18s, border-color .18s; min-height:148px;" style-hover="box-shadow:var(--shadow-card-hover); transform:translateY(-3px); border-color:{{ q.fg }};">
+                <span style="display:inline-flex; align-items:center; justify-content:center; width:48px; height:48px; border-radius:13px; background:{{ q.bg }}; color:{{ q.fg }};"><x-import component-from-global-scope="GLIcon" name="{{ q.icon }}" size="24" hint-size="24px,24px"></x-import></span>
+                <span style="flex:1;">
+                  <span style="display:block; font-size:16px; font-weight:800; color:var(--gl-ink); letter-spacing:-0.01em; line-height:1.25;">{{ q.title }}</span>
+                  <span style="display:block; font-size:13px; color:var(--gl-slate-500); margin-top:4px;">{{ q.sub }}</span>
+                </span>
+                <span style="display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:700; color:{{ q.fg }};">Open <x-import component-from-global-scope="GLIcon" name="ArrowRight" size="15" hint-size="15px,15px"></x-import></span>
+              </button>
+            </sc-for>
+          </div>
+
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+            <h2 style="margin:0; font-size:18px; font-weight:800; color:var(--gl-ink); letter-spacing:-0.01em;">Training modules</h2>
+            <button onClick="{{ goModules }}" style="display:inline-flex; align-items:center; gap:5px; border:none; background:transparent; color:var(--gl-blue); font-family:var(--font-sans); font-size:14px; font-weight:700; cursor:pointer;">All 12 <x-import component-from-global-scope="GLIcon" name="ArrowRight" size="15" hint-size="15px,15px"></x-import></button>
+          </div>
+          <div style="display:grid; grid-template-columns:{{ moduleCols }}; gap:12px; margin-bottom:30px;">
+            <sc-for list="{{ homeModules }}" as="m" hint-placeholder-count="4">
+              <button onClick="{{ m.onClick }}" style="display:flex; align-items:center; gap:13px; text-align:left; background:#fff; border:1px solid var(--gl-slate-200); border-radius:15px; padding:15px; cursor:pointer; transition:box-shadow .15s, transform .15s;" style-hover="box-shadow:var(--shadow-card-hover); transform:translateY(-2px);">
+                <span style="display:inline-flex; align-items:center; justify-content:center; width:42px; height:42px; border-radius:12px; flex-shrink:0; background:{{ m.bg }}; color:{{ m.fg }};"><x-import component-from-global-scope="GLIcon" name="{{ m.icon }}" size="21" hint-size="21px,21px"></x-import></span>
+                <span style="flex:1; min-width:0;">
+                  <span style="display:block; font-size:11px; font-weight:700; color:var(--gl-slate-400); text-transform:uppercase; letter-spacing:0.05em;">Module {{ m.n }}</span>
+                  <span style="display:block; font-size:14.5px; font-weight:700; color:var(--gl-ink); line-height:1.25; margin-top:2px;">{{ m.title }}</span>
+                </span>
+              </button>
+            </sc-for>
+          </div>
+
+          <div style="background:var(--gl-navy); border-radius:20px; padding:24px; color:#fff; display:flex; flex-direction:column; gap:6px;">
+            <span style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.07em; color:#9db4ec;">Remember</span>
+            <p style="margin:0; font-size:19px; font-weight:800; letter-spacing:-0.01em; line-height:1.3;">You don't sell websites. You help businesses get discovered.</p>
+            <p style="margin:4px 0 0; font-size:14px; color:rgba(255,255,255,.72); line-height:1.55;">Educate the customer, run the live AI demonstration, then share your personalised landing page and checkout link. After payment, GlobalLinker takes over everything.</p>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ============ MODULES LIST ============ -->
+      <sc-if value="{{ showModules }}">
+        <div class="gl-fade">
+          <h1 style="margin:0 0 4px; font-size:26px; font-weight:800; letter-spacing:-0.02em; color:var(--gl-ink);">Training Modules</h1>
+          <p style="margin:0 0 22px; font-size:15px; color:var(--gl-slate-600);">Jump to any module, any time. Nothing is locked — this is a knowledge base, not a course.</p>
+          <div style="display:grid; grid-template-columns:{{ moduleGridCols }}; gap:14px;">
+            <sc-for list="{{ moduleCards }}" as="m" hint-placeholder-count="12">
+              <button onClick="{{ m.onClick }}" style="display:flex; flex-direction:column; align-items:flex-start; gap:13px; text-align:left; background:#fff; border:1px solid var(--gl-slate-200); border-radius:18px; padding:20px; cursor:pointer; transition:box-shadow .18s, transform .18s;" style-hover="box-shadow:var(--shadow-card-hover); transform:translateY(-3px);">
+                <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
+                  <span style="display:inline-flex; align-items:center; justify-content:center; width:46px; height:46px; border-radius:13px; background:{{ m.bg }}; color:{{ m.fg }};"><x-import component-from-global-scope="GLIcon" name="{{ m.icon }}" size="23" hint-size="23px,23px"></x-import></span>
+                  <span style="font-size:11px; font-weight:700; color:var(--gl-slate-400); text-transform:uppercase; letter-spacing:0.05em;">Module {{ m.n }}</span>
+                </div>
+                <div style="flex:1;">
+                  <h3 style="margin:0; font-size:16.5px; font-weight:800; color:var(--gl-ink); letter-spacing:-0.01em; line-height:1.25;">{{ m.title }}</h3>
+                  <p style="margin:6px 0 0; font-size:13.5px; color:var(--gl-slate-500); line-height:1.5;">{{ m.tagline }}</p>
+                </div>
+                <div style="display:flex; align-items:center; gap:12px; font-size:12px; color:var(--gl-slate-400); font-weight:600;">
+                  <span style="display:inline-flex; align-items:center; gap:5px;"><x-import component-from-global-scope="GLIcon" name="Clock" size="14" hint-size="14px,14px"></x-import>{{ m.read }}</span>
+                  <span style="display:inline-flex; align-items:center; gap:5px;"><x-import component-from-global-scope="GLIcon" name="Layers" size="14" hint-size="14px,14px"></x-import>{{ m.count }} sections</span>
+                </div>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ============ MODULE DETAIL ============ -->
+      <sc-if value="{{ showModuleDetail }}">
+        <div class="gl-fade">
+          <button onClick="{{ goModules }}" style="display:inline-flex; align-items:center; gap:6px; border:none; background:transparent; color:var(--gl-slate-500); font-family:var(--font-sans); font-size:14px; font-weight:600; cursor:pointer; padding:0; margin-bottom:16px;"><x-import component-from-global-scope="GLIcon" name="ArrowLeft" size="17" hint-size="17px,17px"></x-import> All modules</button>
+          <div style="display:flex; align-items:flex-start; gap:16px; margin-bottom:22px;">
+            <span style="display:inline-flex; align-items:center; justify-content:center; width:56px; height:56px; border-radius:15px; flex-shrink:0; background:{{ am.bg }}; color:{{ am.fg }};"><x-import component-from-global-scope="GLIcon" name="{{ am.icon }}" size="28" hint-size="28px,28px"></x-import></span>
+            <div style="flex:1;">
+              <span style="font-size:12px; font-weight:700; color:var(--gl-slate-400); text-transform:uppercase; letter-spacing:0.06em;">Module {{ am.n }} · {{ am.read }}</span>
+              <h1 style="margin:3px 0 0; font-size:24px; font-weight:800; letter-spacing:-0.02em; line-height:1.18; color:var(--gl-ink);">{{ am.title }}</h1>
+              <p style="margin:6px 0 0; font-size:15px; color:var(--gl-slate-600);">{{ am.tagline }}</p>
+            </div>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <sc-for list="{{ am.sections }}" as="s" hint-placeholder-count="6">
+              <div style="background:#fff; border:1px solid var(--gl-slate-200); border-radius:16px; overflow:hidden;">
+                <button onClick="{{ s.toggle }}" style="display:flex; align-items:center; gap:12px; width:100%; padding:17px 18px; border:none; background:transparent; cursor:pointer; text-align:left; font-family:var(--font-sans);">
+                  <span style="flex:1; font-size:16px; font-weight:700; color:var(--gl-ink); letter-spacing:-0.01em;">{{ s.title }}</span>
+                  <span style="display:inline-flex; color:var(--gl-slate-400); transition:transform .2s; transform:{{ s.chev }};"><x-import component-from-global-scope="GLIcon" name="ChevronDown" size="20" hint-size="20px,20px"></x-import></span>
+                </button>
+                <sc-if value="{{ s.open }}">
+                  <div style="padding:0 18px 20px 18px; display:flex; flex-direction:column; gap:14px;">
+                    <sc-for list="{{ s.blocks }}" as="b" hint-placeholder-count="2">
+                      <sc-if value="{{ b.isP }}"><p style="margin:0; font-size:15px; line-height:1.62; color:var(--gl-slate-600);">{{ b.text }}</p></sc-if>
+                      <sc-if value="{{ b.isLead }}"><p style="margin:0; font-size:18px; line-height:1.45; font-weight:700; color:var(--gl-ink); letter-spacing:-0.01em;">{{ b.text }}</p></sc-if>
+                      <sc-if value="{{ b.isUl }}">
+                        <ul style="margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:8px;">
+                          <sc-for list="{{ b.items }}" as="it"><li style="display:flex; gap:10px; font-size:15px; line-height:1.5; color:var(--gl-slate-600);"><span style="color:var(--gl-blue); flex-shrink:0; margin-top:7px; width:5px; height:5px; border-radius:999px; background:var(--gl-blue);"></span><span style="flex:1;">{{ it }}</span></li></sc-for>
+                        </ul>
+                      </sc-if>
+                      <sc-if value="{{ b.isOk }}">
+                        <ul style="margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:9px;">
+                          <sc-for list="{{ b.items }}" as="it"><li style="display:flex; gap:10px; font-size:15px; line-height:1.45; color:var(--gl-slate-700);"><span style="display:inline-flex; flex-shrink:0; color:var(--gl-success); margin-top:1px;"><x-import component-from-global-scope="GLIcon" name="CheckCircle2" size="19" hint-size="19px,19px"></x-import></span><span style="flex:1;">{{ it }}</span></li></sc-for>
+                        </ul>
+                      </sc-if>
+                      <sc-if value="{{ b.isNo }}">
+                        <ul style="margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:9px;">
+                          <sc-for list="{{ b.items }}" as="it"><li style="display:flex; gap:10px; font-size:15px; line-height:1.45; color:var(--gl-slate-700);"><span style="display:inline-flex; flex-shrink:0; color:var(--gl-slate-400); margin-top:1px;"><x-import component-from-global-scope="GLIcon" name="XCircle" size="19" hint-size="19px,19px"></x-import></span><span style="flex:1;">{{ it }}</span></li></sc-for>
+                        </ul>
+                      </sc-if>
+                      <sc-if value="{{ b.isFlow }}">
+                        <div style="display:flex; flex-direction:column; gap:0;">
+                          <sc-for list="{{ b.items }}" as="f"><div style="display:flex; flex-direction:column; align-items:flex-start;"><div style="display:inline-flex; align-items:center; gap:9px; background:var(--gl-slate-50); border:1px solid var(--gl-slate-200); border-radius:11px; padding:10px 14px; font-size:14.5px; font-weight:600; color:var(--gl-ink);">{{ f.title }}</div><sc-if value="{{ f.notLast }}"><span style="display:inline-flex; color:var(--gl-slate-300); margin:2px 0 2px 16px;"><x-import component-from-global-scope="GLIcon" name="ArrowDown" size="16" hint-size="16px,16px"></x-import></span></sc-if></div></sc-for>
+                        </div>
+                      </sc-if>
+                      <sc-if value="{{ b.isSteps }}">
+                        <div style="display:flex; flex-direction:column; gap:10px;">
+                          <sc-for list="{{ b.items }}" as="st"><div style="display:flex; gap:13px;"><span style="display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; border-radius:999px; flex-shrink:0; background:var(--gl-blue-50); color:var(--gl-blue); font-size:13px; font-weight:800;">{{ st.n }}</span><div style="flex:1; padding-top:3px;"><div style="font-size:15px; font-weight:700; color:var(--gl-ink); line-height:1.3;">{{ st.title }}</div><sc-if value="{{ st.text }}"><div style="font-size:14px; color:var(--gl-slate-500); margin-top:3px; line-height:1.5;">{{ st.text }}</div></sc-if></div></div></sc-for>
+                        </div>
+                      </sc-if>
+                      <sc-if value="{{ b.isCallout }}">
+                        <div style="border-radius:13px; padding:15px 16px; background:{{ b.cBg }}; border:1px solid {{ b.cBorder }};">
+                          <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:{{ b.cTitle }};">{{ b.title }}</div>
+                          <div style="font-size:14.5px; line-height:1.55; color:{{ b.cText }}; margin-top:5px;">{{ b.text }}</div>
+                        </div>
+                      </sc-if>
+                      <sc-if value="{{ b.isTable }}">
+                        <div style="border:1px solid var(--gl-slate-200); border-radius:13px; overflow:hidden;">
+                          <div style="display:flex; background:var(--gl-navy);">
+                            <sc-for list="{{ b.cols }}" as="c"><div style="flex:1; padding:11px 14px; font-size:12.5px; font-weight:700; color:#fff;">{{ c }}</div></sc-for>
+                          </div>
+                          <sc-for list="{{ b.trows }}" as="row"><div style="display:flex; background:{{ row.bg }}; border-top:1px solid var(--gl-slate-200);"><sc-for list="{{ row.cells }}" as="cell"><div style="flex:1; padding:11px 14px; font-size:14px; color:var(--gl-slate-700); line-height:1.45;">{{ cell }}</div></sc-for></div></sc-for>
+                        </div>
+                      </sc-if>
+                      <sc-if value="{{ b.isVideo }}">
+                        <div style="border-radius:15px; overflow:hidden; border:1px solid var(--gl-slate-200);">
+                          {{ b.media }}
+                          <div style="padding:13px 16px; background:#fff;">
+                            <div style="font-size:14.5px; font-weight:700; color:var(--gl-ink);">{{ b.title }}</div>
+                            <div style="font-size:13px; color:var(--gl-slate-500); margin-top:3px; line-height:1.5;">{{ b.desc }}</div>
+                          </div>
+                        </div>
+                      </sc-if>
+                      <sc-if value="{{ b.isQa }}">
+                        <div style="display:flex; flex-direction:column; gap:11px;">
+                          <sc-for list="{{ b.items }}" as="qi"><div style="background:var(--gl-slate-50); border-radius:12px; padding:13px 15px;"><div style="font-size:14.5px; font-weight:700; color:var(--gl-ink);">{{ qi.q }}</div><div style="font-size:14px; color:var(--gl-slate-600); margin-top:4px; line-height:1.5;">{{ qi.a }}</div></div></sc-for>
+                        </div>
+                      </sc-if>
+                      <sc-if value="{{ b.isSwap }}">
+                        <div style="display:flex; flex-direction:column; gap:10px;">
+                          <sc-for list="{{ b.items }}" as="sw"><div style="display:flex; flex-direction:column; gap:7px; background:var(--gl-blue-50); border-radius:13px; padding:14px 15px;"><div style="display:flex; gap:9px; align-items:flex-start;"><span style="display:inline-flex; color:var(--gl-slate-400); flex-shrink:0; margin-top:1px;"><x-import component-from-global-scope="GLIcon" name="X" size="16" hint-size="16px,16px"></x-import></span><span style="font-size:14px; color:var(--gl-slate-500); text-decoration:line-through;">{{ sw.plain }}</span></div><div style="display:flex; gap:9px; align-items:flex-start;"><span style="display:inline-flex; color:var(--gl-success); flex-shrink:0; margin-top:1px;"><x-import component-from-global-scope="GLIcon" name="Check" size="16" hint-size="16px,16px"></x-import></span><span style="font-size:15px; color:var(--gl-ink); font-weight:600; line-height:1.5;">{{ sw.say }}</span></div></div></sc-for>
+                        </div>
+                      </sc-if>
+                    </sc-for>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+
+          <sc-if value="{{ am.linkAiDemo }}">
+            <button onClick="{{ goAidemo }}" style="display:flex; align-items:center; gap:13px; width:100%; margin-top:16px; background:var(--gl-orange); border:none; border-radius:16px; padding:18px 20px; cursor:pointer; box-shadow:var(--shadow-cta); text-align:left;">
+              <span style="display:inline-flex; color:#fff;"><x-import component-from-global-scope="GLIcon" name="Bot" size="24" hint-size="24px,24px"></x-import></span>
+              <span style="flex:1; color:#fff;"><span style="display:block; font-size:16px; font-weight:800;">Open the interactive AI Demonstration</span><span style="display:block; font-size:13px; opacity:.85; margin-top:2px;">Run the live 6-step walkthrough with one-tap tool links.</span></span>
+              <span style="display:inline-flex; color:#fff;"><x-import component-from-global-scope="GLIcon" name="ArrowRight" size="20" hint-size="20px,20px"></x-import></span>
+            </button>
+          </sc-if>
+          <sc-if value="{{ am.linkCases }}">
+            <button onClick="{{ goCases }}" style="display:flex; align-items:center; gap:13px; width:100%; margin-top:16px; background:var(--gl-navy); border:none; border-radius:16px; padding:18px 20px; cursor:pointer; text-align:left;">
+              <span style="display:inline-flex; color:var(--gl-orange);"><x-import component-from-global-scope="GLIcon" name="Trophy" size="24" hint-size="24px,24px"></x-import></span>
+              <span style="flex:1; color:#fff;"><span style="display:block; font-size:16px; font-weight:800;">See real case studies</span><span style="display:block; font-size:13px; color:rgba(255,255,255,.7); margin-top:2px;">Show prospects how businesses became AI-discoverable lead generators.</span></span>
+              <span style="display:inline-flex; color:#fff;"><x-import component-from-global-scope="GLIcon" name="ArrowRight" size="20" hint-size="20px,20px"></x-import></span>
+            </button>
+          </sc-if>
+
+          <div style="display:flex; gap:11px; margin-top:24px; padding-top:20px; border-top:1px solid var(--gl-slate-200);">
+            <sc-if value="{{ am.hasPrev }}">
+              <button onClick="{{ am.goPrev }}" style="flex:1; display:flex; align-items:center; gap:11px; text-align:left; background:#fff; border:1px solid var(--gl-slate-200); border-radius:14px; padding:14px 16px; cursor:pointer; transition:box-shadow .15s, transform .15s;" style-hover="box-shadow:var(--shadow-card-hover); transform:translateY(-2px);">
+                <span style="display:inline-flex; color:var(--gl-slate-400); flex-shrink:0;"><x-import component-from-global-scope="GLIcon" name="ArrowLeft" size="20" hint-size="20px,20px"></x-import></span>
+                <span style="flex:1; min-width:0;"><span style="display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--gl-slate-400);">Previous · Module {{ am.prevN }}</span><span style="display:block; font-size:14px; font-weight:700; color:var(--gl-ink); margin-top:2px; line-height:1.3;">{{ am.prevTitle }}</span></span>
+              </button>
+            </sc-if>
+            <sc-if value="{{ am.hasNext }}">
+              <button onClick="{{ am.goNext }}" style="flex:1; display:flex; align-items:center; gap:11px; text-align:right; background:#fff; border:1px solid var(--gl-slate-200); border-radius:14px; padding:14px 16px; cursor:pointer; transition:box-shadow .15s, transform .15s;" style-hover="box-shadow:var(--shadow-card-hover); transform:translateY(-2px);">
+                <span style="flex:1; min-width:0;"><span style="display:block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--gl-blue);">Next · Module {{ am.nextN }}</span><span style="display:block; font-size:14px; font-weight:700; color:var(--gl-ink); margin-top:2px; line-height:1.3;">{{ am.nextTitle }}</span></span>
+                <span style="display:inline-flex; color:var(--gl-blue); flex-shrink:0;"><x-import component-from-global-scope="GLIcon" name="ArrowRight" size="20" hint-size="20px,20px"></x-import></span>
+              </button>
+            </sc-if>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ============ AI DEMONSTRATION ============ -->
+      <sc-if value="{{ showAidemo }}">
+        <div class="gl-fade">
+          <span style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--gl-orange);">Live Demonstration</span>
+          <h1 style="margin:5px 0 6px; font-size:26px; font-weight:800; letter-spacing:-0.02em; color:var(--gl-ink);">AI Discoverability Demonstration</h1>
+          <p style="margin:0 0 18px; font-size:15px; line-height:1.6; color:var(--gl-slate-600); max-width:640px;">{{ aiIntro }}</p>
+
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <sc-for list="{{ aiSteps }}" as="s" hint-placeholder-count="6">
+              <div style="background:#fff; border:1px solid var(--gl-slate-200); border-radius:16px; overflow:hidden;">
+                <button onClick="{{ s.toggle }}" style="display:flex; align-items:center; gap:14px; width:100%; padding:16px 18px; border:none; background:transparent; cursor:pointer; text-align:left; font-family:var(--font-sans);">
+                  <span style="display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:999px; flex-shrink:0; background:var(--gl-orange-50); color:var(--gl-orange); font-size:15px; font-weight:800;">{{ s.n }}</span>
+                  <span style="flex:1;"><span style="display:block; font-size:16px; font-weight:800; color:var(--gl-ink); letter-spacing:-0.01em;">{{ s.title }}</span><span style="display:block; font-size:13px; color:var(--gl-slate-500); margin-top:2px; line-height:1.4;">{{ s.sub }}</span></span>
+                  <span style="display:inline-flex; color:var(--gl-slate-400); transition:transform .2s; transform:{{ s.chev }};"><x-import component-from-global-scope="GLIcon" name="ChevronDown" size="20" hint-size="20px,20px"></x-import></span>
+                </button>
+                <sc-if value="{{ s.open }}">
+                  <div style="padding:0 18px 20px 18px; display:flex; flex-direction:column; gap:14px;">
+                    <p style="margin:0; font-size:15px; line-height:1.6; color:var(--gl-slate-600);">{{ s.detail }}</p>
+                    <div style="display:flex; flex-direction:column; gap:7px;">
+                      <sc-for list="{{ s.examples }}" as="ex"><div style="background:var(--gl-slate-50); border:1px solid var(--gl-slate-200); border-radius:10px; padding:10px 13px; font-size:14px; color:var(--gl-slate-700); line-height:1.45;">{{ ex }}</div></sc-for>
+                    </div>
+                    <div style="background:var(--gl-blue-50); border-radius:12px; padding:13px 15px;"><div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:var(--gl-blue-700);">Ask the customer</div><div style="font-size:14.5px; color:var(--gl-ink); margin-top:4px; line-height:1.55;">{{ s.ask }}</div></div>
+                    <sc-if value="{{ s.hasTools }}">
+                      <div style="display:flex; flex-wrap:wrap; gap:9px;">
+                        <sc-for list="{{ s.tools }}" as="t"><button onClick="{{ t.onClick }}" style="display:inline-flex; align-items:center; gap:8px; background:var(--gl-navy); border:none; border-radius:11px; padding:11px 16px; cursor:pointer; color:#fff; font-family:var(--font-sans); font-size:14px; font-weight:700;"><x-import component-from-global-scope="GLIcon" name="{{ t.icon }}" size="16" hint-size="16px,16px"></x-import>{{ t.label }}</button></sc-for>
+                      </div>
+                    </sc-if>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="background:#fff; border:1px solid var(--gl-slate-200); border-radius:16px; padding:18px 20px; margin-top:16px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+              <h3 style="margin:0; font-size:16px; font-weight:800; color:var(--gl-ink);">Demonstration checklist</h3>
+              <span style="font-size:13px; font-weight:700; color:var(--gl-success);">{{ checkDone }}/{{ checkTotal }}</span>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:4px;">
+              <sc-for list="{{ aiChecklist }}" as="c" hint-placeholder-count="9">
+                <button onClick="{{ c.toggle }}" style="display:flex; align-items:center; gap:11px; width:100%; padding:9px 4px; border:none; background:transparent; cursor:pointer; text-align:left; font-family:var(--font-sans);">
+                  <span style="display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:7px; flex-shrink:0; border:2px solid {{ c.boxBorder }}; background:{{ c.boxBg }}; color:#fff;"><sc-if value="{{ c.done }}"><x-import component-from-global-scope="GLIcon" name="Check" size="14" hint-size="14px,14px"></x-import></sc-if></span>
+                  <span style="font-size:14.5px; color:{{ c.textColor }}; text-decoration:{{ c.strike }};">{{ c.label }}</span>
+                </button>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ============ SCRIPTS ============ -->
+      <sc-if value="{{ showScripts }}">
+        <div class="gl-fade">
+          <h1 style="margin:0 0 4px; font-size:26px; font-weight:800; letter-spacing:-0.02em; color:var(--gl-ink);">Sales Scripts</h1>
+          <p style="margin:0 0 16px; font-size:15px; color:var(--gl-slate-600);">Ready-to-use conversation starters. Copy any script in one tap and make it your own.</p>
+          <div style="display:flex; gap:8px; overflow-x:auto; padding-bottom:8px; margin-bottom:16px;" class="gl-hidescroll">
+            <sc-for list="{{ scriptFilters }}" as="f" hint-placeholder-count="6"><button onClick="{{ f.onClick }}" style="white-space:nowrap; border:1px solid {{ f.border }}; background:{{ f.bg }}; color:{{ f.fg }}; border-radius:999px; padding:8px 15px; font-family:var(--font-sans); font-size:13.5px; font-weight:700; cursor:pointer;">{{ f.label }}</button></sc-for>
+          </div>
+          <div style="display:grid; grid-template-columns:{{ cardCols }}; gap:14px;">
+            <sc-for list="{{ scriptCards }}" as="s" hint-placeholder-count="6">
+              <div style="display:flex; flex-direction:column; background:#fff; border:1px solid var(--gl-slate-200); border-radius:16px; padding:18px; gap:13px;">
+                <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:10px;">
+                  <div style="flex:1;">
+                    <div style="display:flex; gap:7px; margin-bottom:7px;"><span style="font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--gl-blue); background:var(--gl-blue-50); padding:3px 9px; border-radius:999px;">{{ s.channel }}</span><span style="font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--gl-slate-500); background:var(--gl-slate-100); padding:3px 9px; border-radius:999px;">{{ s.stage }}</span></div>
+                    <h3 style="margin:0; font-size:16px; font-weight:800; color:var(--gl-ink); letter-spacing:-0.01em; line-height:1.25;">{{ s.title }}</h3>
+                  </div>
+                  <button onClick="{{ s.onFav }}" style="display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:10px; border:none; background:{{ s.favBg }}; color:{{ s.favFg }}; cursor:pointer; flex-shrink:0;"><x-import component-from-global-scope="GLIcon" name="{{ s.favIcon }}" size="18" hint-size="18px,18px"></x-import></button>
+                </div>
+                <p style="margin:0; font-size:14px; line-height:1.6; color:var(--gl-slate-600); white-space:pre-wrap;">{{ s.body }}</p>
+                <div style="display:flex; gap:9px; margin-top:auto;">
+                  <button onClick="{{ s.onCopy }}" style="flex:1; display:inline-flex; align-items:center; justify-content:center; gap:8px; background:var(--gl-navy); border:none; border-radius:11px; padding:11px; cursor:pointer; color:#fff; font-family:var(--font-sans); font-size:14px; font-weight:700;"><x-import component-from-global-scope="GLIcon" name="{{ s.copyIcon }}" size="16" hint-size="16px,16px"></x-import>{{ s.copyLabel }}</button>
+                  <button onClick="{{ s.onShare }}" style="display:inline-flex; align-items:center; justify-content:center; width:44px; border:1px solid var(--gl-slate-200); border-radius:11px; cursor:pointer; background:#fff; color:var(--gl-slate-600);"><x-import component-from-global-scope="GLIcon" name="Share2" size="17" hint-size="17px,17px"></x-import></button>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ============ MESSAGES (WHATSAPP & EMAIL) ============ -->
+      <sc-if value="{{ showMessages }}">
+        <div class="gl-fade">
+          <h1 style="margin:0 0 4px; font-size:26px; font-weight:800; letter-spacing:-0.02em; color:var(--gl-ink);">WhatsApp & Email Scripts</h1>
+          <p style="margin:0 0 16px; font-size:15px; color:var(--gl-slate-600);">Copy-and-send follow-up templates. Replace the <span style="font-family:monospace; background:var(--gl-slate-100); padding:1px 5px; border-radius:5px; font-size:13px;">{{ namePlaceholder }}</span> placeholders with your customer's details.</p>
+          <div style="display:flex; gap:8px; margin-bottom:16px;">
+            <sc-for list="{{ msgFilters }}" as="f" hint-placeholder-count="3"><button onClick="{{ f.onClick }}" style="white-space:nowrap; border:1px solid {{ f.border }}; background:{{ f.bg }}; color:{{ f.fg }}; border-radius:999px; padding:8px 16px; font-family:var(--font-sans); font-size:13.5px; font-weight:700; cursor:pointer;">{{ f.label }}</button></sc-for>
+          </div>
+          <div style="display:grid; grid-template-columns:{{ cardCols }}; gap:14px;">
+            <sc-for list="{{ messageCards }}" as="m" hint-placeholder-count="6">
+              <div style="display:flex; flex-direction:column; background:#fff; border:1px solid var(--gl-slate-200); border-radius:16px; padding:18px; gap:12px;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <span style="display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:10px; flex-shrink:0; background:{{ m.chanBg }}; color:{{ m.chanFg }};"><x-import component-from-global-scope="GLIcon" name="{{ m.chanIcon }}" size="18" hint-size="18px,18px"></x-import></span>
+                  <div style="flex:1; min-width:0;"><div style="font-size:15.5px; font-weight:800; color:var(--gl-ink); line-height:1.2;">{{ m.title }}</div><div style="font-size:12px; color:var(--gl-slate-400); font-weight:600; margin-top:2px;">{{ m.type }} · {{ m.stage }}</div></div>
+                  <button onClick="{{ m.onFav }}" style="display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:10px; border:none; background:{{ m.favBg }}; color:{{ m.favFg }}; cursor:pointer; flex-shrink:0;"><x-import component-from-global-scope="GLIcon" name="{{ m.favIcon }}" size="18" hint-size="18px,18px"></x-import></button>
+                </div>
+                <sc-if value="{{ m.subject }}"><div style="font-size:13px; color:var(--gl-slate-500);"><span style="font-weight:700; color:var(--gl-slate-600);">Subject:</span> {{ m.subject }}</div></sc-if>
+                <p style="margin:0; font-size:14px; line-height:1.6; color:var(--gl-slate-600); white-space:pre-wrap;">{{ m.body }}</p>
+                <div style="display:flex; gap:9px; margin-top:auto;">
+                  <button onClick="{{ m.onCopy }}" style="flex:1; display:inline-flex; align-items:center; justify-content:center; gap:8px; background:var(--gl-navy); border:none; border-radius:11px; padding:11px; cursor:pointer; color:#fff; font-family:var(--font-sans); font-size:14px; font-weight:700;"><x-import component-from-global-scope="GLIcon" name="{{ m.copyIcon }}" size="16" hint-size="16px,16px"></x-import>{{ m.copyLabel }}</button>
+                  <button onClick="{{ m.onShare }}" style="display:inline-flex; align-items:center; justify-content:center; width:44px; border:1px solid var(--gl-slate-200); border-radius:11px; cursor:pointer; background:#fff; color:var(--gl-slate-600);"><x-import component-from-global-scope="GLIcon" name="Share2" size="17" hint-size="17px,17px"></x-import></button>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ============ OBJECTIONS ============ -->
+      <sc-if value="{{ showObjections }}">
+        <div class="gl-fade">
+          <h1 style="margin:0 0 4px; font-size:26px; font-weight:800; letter-spacing:-0.02em; color:var(--gl-ink);">Objection Library</h1>
+          <p style="margin:0 0 18px; font-size:15px; color:var(--gl-slate-600);">Every objection is a buying signal. Tap to reveal a calm, proven response you can copy and adapt.</p>
+          <div style="display:flex; flex-direction:column; gap:11px;">
+            <sc-for list="{{ objectionCards }}" as="o" hint-placeholder-count="8">
+              <div style="background:#fff; border:1px solid var(--gl-slate-200); border-radius:16px; overflow:hidden;">
+                <button onClick="{{ o.toggle }}" style="display:flex; align-items:center; gap:13px; width:100%; padding:16px 18px; border:none; background:transparent; cursor:pointer; text-align:left; font-family:var(--font-sans);">
+                  <span style="display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:10px; flex-shrink:0; background:var(--gl-orange-50); color:var(--gl-orange);"><x-import component-from-global-scope="GLIcon" name="MessageCircleQuestion" size="19" hint-size="19px,19px"></x-import></span>
+                  <span style="flex:1; font-size:16px; font-weight:800; color:var(--gl-ink); letter-spacing:-0.01em; line-height:1.3;">“{{ o.q }}”</span>
+                  <span style="display:inline-flex; color:var(--gl-slate-400); transition:transform .2s; transform:{{ o.chev }};"><x-import component-from-global-scope="GLIcon" name="ChevronDown" size="20" hint-size="20px,20px"></x-import></span>
+                </button>
+                <sc-if value="{{ o.open }}">
+                  <div style="padding:0 18px 18px 18px; display:flex; flex-direction:column; gap:13px;">
+                    <sc-if value="{{ o.never }}"><div style="display:flex; gap:9px; align-items:flex-start; background:var(--gl-danger-50); border-radius:11px; padding:11px 13px;"><span style="display:inline-flex; color:var(--gl-danger); flex-shrink:0; margin-top:1px;"><x-import component-from-global-scope="GLIcon" name="Ban" size="17" hint-size="17px,17px"></x-import></span><span style="font-size:13.5px; color:var(--gl-slate-600);"><b style="color:var(--gl-danger);">Never say:</b> {{ o.never }}</span></div></sc-if>
+                    <div style="background:var(--gl-blue-50); border-radius:13px; padding:15px 16px;">
+                      <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:var(--gl-blue-700); margin-bottom:6px;">Recommended response</div>
+                      <p style="margin:0; font-size:15px; line-height:1.6; color:var(--gl-ink); white-space:pre-wrap;">{{ o.response }}</p>
+                    </div>
+                    <div style="display:flex; gap:9px; align-items:flex-start;"><span style="display:inline-flex; color:var(--gl-success); flex-shrink:0; margin-top:2px;"><x-import component-from-global-scope="GLIcon" name="Lightbulb" size="17" hint-size="17px,17px"></x-import></span><span style="font-size:13.5px; color:var(--gl-slate-600); line-height:1.55;"><b style="color:var(--gl-slate-700);">Why this works:</b> {{ o.why }}</span></div>
+                    <sc-if value="{{ o.warn }}"><div style="display:flex; gap:9px; align-items:flex-start; background:var(--gl-orange-50); border-radius:11px; padding:11px 13px;"><span style="display:inline-flex; color:var(--gl-orange-700); flex-shrink:0; margin-top:1px;"><x-import component-from-global-scope="GLIcon" name="AlertTriangle" size="17" hint-size="17px,17px"></x-import></span><span style="font-size:13.5px; color:var(--gl-orange-700); line-height:1.5;">{{ o.warn }}</span></div></sc-if>
+                    <div style="display:flex; gap:9px;">
+                      <button onClick="{{ o.onCopy }}" style="flex:1; display:inline-flex; align-items:center; justify-content:center; gap:8px; background:var(--gl-navy); border:none; border-radius:11px; padding:11px; cursor:pointer; color:#fff; font-family:var(--font-sans); font-size:14px; font-weight:700;"><x-import component-from-global-scope="GLIcon" name="{{ o.copyIcon }}" size="16" hint-size="16px,16px"></x-import>{{ o.copyLabel }}</button>
+                      <button onClick="{{ o.onShare }}" style="display:inline-flex; align-items:center; justify-content:center; width:44px; border:1px solid var(--gl-slate-200); border-radius:11px; cursor:pointer; background:#fff; color:var(--gl-slate-600);"><x-import component-from-global-scope="GLIcon" name="Share2" size="17" hint-size="17px,17px"></x-import></button>
+                      <button onClick="{{ o.onFav }}" style="display:inline-flex; align-items:center; justify-content:center; width:44px; border:none; border-radius:11px; cursor:pointer; background:{{ o.favBg }}; color:{{ o.favFg }};"><x-import component-from-global-scope="GLIcon" name="{{ o.favIcon }}" size="18" hint-size="18px,18px"></x-import></button>
+                    </div>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ============ WEBSITE EXAMPLES ============ -->
+      <sc-if value="{{ showWebsites }}">
+        <div class="gl-fade">
+          <h1 style="margin:0 0 4px; font-size:26px; font-weight:800; letter-spacing:-0.02em; color:var(--gl-ink);">Website Examples</h1>
+          <p style="margin:0 0 14px; font-size:15px; color:var(--gl-slate-600);">Show, don't tell. Open a real example from the customer's industry on your phone during the meeting.</p>
+          <div style="display:flex; align-items:center; gap:10px; background:#fff; border:1px solid var(--gl-slate-200); border-radius:12px; padding:0 12px; height:44px; margin-bottom:13px;">
+            <span style="display:inline-flex; color:var(--gl-slate-400);"><x-import component-from-global-scope="GLIcon" name="Search" size="18" hint-size="18px,18px"></x-import></span>
+            <input value="{{ wQuery }}" onChange="{{ onWQuery }}" placeholder="Search by company name…" style="flex:1; border:none; outline:none; background:transparent; font-family:var(--font-sans); font-size:14.5px; color:var(--gl-ink); min-width:0;" />
+          </div>
+          <div style="display:flex; gap:8px; overflow-x:auto; padding-bottom:8px; margin-bottom:18px;" class="gl-hidescroll">
+            <sc-for list="{{ industryFilters }}" as="f" hint-placeholder-count="6"><button onClick="{{ f.onClick }}" style="white-space:nowrap; border:1px solid {{ f.border }}; background:{{ f.bg }}; color:{{ f.fg }}; border-radius:999px; padding:8px 15px; font-family:var(--font-sans); font-size:13.5px; font-weight:700; cursor:pointer;">{{ f.label }} <span style="opacity:.6;">{{ f.count }}</span></button></sc-for>
+          </div>
+          <div style="display:grid; grid-template-columns:{{ webCols }}; gap:14px;">
+            <sc-for list="{{ websiteCards }}" as="w" hint-placeholder-count="9">
+              <div style="display:flex; flex-direction:column; background:#fff; border:1px solid var(--gl-slate-200); border-radius:16px; overflow:hidden; transition:box-shadow .15s, transform .15s;" style-hover="box-shadow:var(--shadow-card-hover); transform:translateY(-2px);">
+                <div style="position:relative; height:128px; background:{{ w.grad }}; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+                  <div style="position:absolute; top:10px; left:12px; right:12px; display:flex; align-items:center; gap:5px; background:rgba(255,255,255,.92); border-radius:8px; padding:5px 9px;">
+                    <span style="width:7px; height:7px; border-radius:999px; background:#f87171;"></span><span style="width:7px; height:7px; border-radius:999px; background:#fbbf24;"></span><span style="width:7px; height:7px; border-radius:999px; background:#34d399;"></span>
+                    <span style="flex:1; font-size:10.5px; color:var(--gl-slate-500); margin-left:5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-family:monospace;">{{ w.domain }}</span>
+                  </div>
+                  <span style="font-size:30px; font-weight:800; color:rgba(255,255,255,.95); letter-spacing:-0.02em; margin-top:14px;">{{ w.initials }}</span>
+                </div>
+                <div style="padding:15px; display:flex; flex-direction:column; gap:10px; flex:1;">
+                  <div style="flex:1;"><h3 style="margin:0; font-size:15.5px; font-weight:800; color:var(--gl-ink); line-height:1.25; letter-spacing:-0.01em;">{{ w.name }}</h3><span style="display:inline-block; font-size:11px; font-weight:700; color:var(--gl-blue); background:var(--gl-blue-50); padding:3px 9px; border-radius:999px; margin-top:7px;">{{ w.industry }}</span></div>
+                  <div style="display:flex; gap:8px;">
+                    <button onClick="{{ w.onVisit }}" style="flex:1; display:inline-flex; align-items:center; justify-content:center; gap:7px; background:var(--gl-blue); border:none; border-radius:10px; padding:10px; cursor:pointer; color:#fff; font-family:var(--font-sans); font-size:13.5px; font-weight:700;"><x-import component-from-global-scope="GLIcon" name="ExternalLink" size="15" hint-size="15px,15px"></x-import>Visit</button>
+                    <button onClick="{{ w.onShare }}" style="display:inline-flex; align-items:center; justify-content:center; width:40px; border:1px solid var(--gl-slate-200); border-radius:10px; cursor:pointer; background:#fff; color:var(--gl-slate-600);"><x-import component-from-global-scope="GLIcon" name="Share2" size="16" hint-size="16px,16px"></x-import></button>
+                  </div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ============ CASE STUDIES ============ -->
+      <sc-if value="{{ showCases }}">
+        <div class="gl-fade">
+          <span style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--gl-orange);">Real Transformations</span>
+          <h1 style="margin:5px 0 6px; font-size:26px; font-weight:800; letter-spacing:-0.02em; color:var(--gl-ink);">Case Studies</h1>
+          <p style="margin:0 0 22px; font-size:15px; line-height:1.6; color:var(--gl-slate-600); max-width:640px;">How real businesses moved from invisible to discoverable — building high-trust ecosystems that generate global B2B leads. Use these to help prospects picture their own transformation.</p>
+
+          <div style="display:flex; flex-direction:column; gap:18px;">
+            <sc-for list="{{ caseStudies }}" as="cs" hint-placeholder-count="2">
+              <div style="background:#fff; border:1px solid var(--gl-slate-200); border-radius:18px; overflow:hidden;">
+                <div style="background:var(--gl-navy); padding:20px; display:flex; align-items:center; gap:16px;">
+                  <span style="display:inline-flex; align-items:center; justify-content:center; width:54px; height:54px; border-radius:14px; flex-shrink:0; background:rgba(255,255,255,.1); color:#fff; font-size:18px; font-weight:800;">{{ cs.n }}</span>
+                  <div style="flex:1; min-width:0;">
+                    <h2 style="margin:0; font-size:20px; font-weight:800; color:#fff; letter-spacing:-0.01em; line-height:1.2;">{{ cs.company }}</h2>
+                    <div style="font-size:13px; color:#9db4ec; font-weight:600; margin-top:2px;">{{ cs.industry }}</div>
+                  </div>
+                  <div style="text-align:right; flex-shrink:0;"><div style="font-size:28px; font-weight:800; color:var(--gl-orange); line-height:1;">{{ cs.metric }}</div><div style="font-size:10.5px; color:rgba(255,255,255,.6); text-transform:uppercase; letter-spacing:0.05em; margin-top:3px;">{{ cs.metricLabel }}</div></div>
+                </div>
+                <div style="padding:20px; display:flex; flex-direction:column; gap:18px;">
+                  <p style="margin:0; font-size:15.5px; line-height:1.55; color:var(--gl-slate-700); font-weight:600;">{{ cs.tagline }}</p>
+                  <p style="margin:0; font-size:14.5px; line-height:1.6; color:var(--gl-slate-600);">{{ cs.summary }}</p>
+
+                  <div style="background:var(--gl-orange-50); border-radius:13px; padding:15px 16px;">
+                    <div style="font-size:13px; font-weight:800; color:var(--gl-orange-700); display:flex; align-items:center; gap:8px;"><x-import component-from-global-scope="GLIcon" name="AlertTriangle" size="16" hint-size="16px,16px"></x-import>{{ cs.challengeTitle }}</div>
+                    <ul style="margin:11px 0 0; padding:0; list-style:none; display:flex; flex-direction:column; gap:8px;">
+                      <sc-for list="{{ cs.challenge }}" as="ch"><li style="display:flex; gap:9px; font-size:14px; line-height:1.5; color:var(--gl-slate-700);"><span style="flex-shrink:0; margin-top:8px; width:5px; height:5px; border-radius:999px; background:var(--gl-orange);"></span><span style="flex:1;">{{ ch }}</span></li></sc-for>
+                    </ul>
+                    <div style="font-size:13px; font-style:italic; color:var(--gl-orange-700); margin-top:11px;">{{ cs.challengeNote }}</div>
+                  </div>
+
+                  <div>
+                    <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:var(--gl-blue); margin-bottom:11px;">Done-for-Me transformation strategy</div>
+                    <div style="display:grid; grid-template-columns:{{ cardCols }}; gap:11px;">
+                      <sc-for list="{{ cs.strategy }}" as="st"><div style="background:var(--gl-slate-50); border:1px solid var(--gl-slate-200); border-radius:12px; padding:14px;"><div style="font-size:14.5px; font-weight:800; color:var(--gl-ink);">{{ st.title }}</div><div style="font-size:13px; color:var(--gl-slate-600); margin-top:5px; line-height:1.5;">{{ st.text }}</div></div></sc-for>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:var(--gl-success); margin-bottom:11px;">Breakthrough results</div>
+                    <ul style="margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:9px;">
+                      <sc-for list="{{ cs.results }}" as="rs"><li style="display:flex; gap:10px; font-size:14.5px; line-height:1.5; color:var(--gl-slate-700);"><span style="display:inline-flex; flex-shrink:0; color:var(--gl-success); margin-top:1px;"><x-import component-from-global-scope="GLIcon" name="TrendingUp" size="18" hint-size="18px,18px"></x-import></span><span style="flex:1;">{{ rs }}</span></li></sc-for>
+                    </ul>
+                  </div>
+
+                  <div style="border:1px solid var(--gl-slate-200); border-radius:13px; overflow:hidden;">
+                    <div style="display:flex; background:var(--gl-navy);">
+                      <div style="flex:1.2; padding:11px 14px; font-size:12px; font-weight:700; color:#fff;">Ecosystem component</div>
+                      <div style="flex:1; padding:11px 14px; font-size:12px; font-weight:700; color:#9db4ec;">Legacy state</div>
+                      <div style="flex:1; padding:11px 14px; font-size:12px; font-weight:700; color:var(--gl-orange);">After DFM</div>
+                    </div>
+                    <sc-for list="{{ cs.impact }}" as="row"><div style="display:flex; border-top:1px solid var(--gl-slate-200);"><div style="flex:1.2; padding:11px 14px; font-size:13.5px; font-weight:700; color:var(--gl-ink); line-height:1.4;">{{ row.component }}</div><div style="flex:1; padding:11px 14px; font-size:13.5px; color:var(--gl-slate-500); line-height:1.4;">{{ row.legacy }}</div><div style="flex:1; padding:11px 14px; font-size:13.5px; color:var(--gl-slate-700); font-weight:600; line-height:1.4;">{{ row.post }}</div></div></sc-for>
+                  </div>
+
+                  <button onClick="{{ cs.onVisit }}" style="display:inline-flex; align-items:center; justify-content:center; gap:8px; align-self:flex-start; background:var(--gl-blue); border:none; border-radius:11px; padding:11px 18px; cursor:pointer; color:#fff; font-family:var(--font-sans); font-size:14px; font-weight:700;"><x-import component-from-global-scope="GLIcon" name="ExternalLink" size="16" hint-size="16px,16px"></x-import>Visit live website</button>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+
+          <h2 style="margin:28px 0 12px; font-size:18px; font-weight:800; color:var(--gl-ink); letter-spacing:-0.01em;">Core insights · common misconceptions</h2>
+          <div style="display:flex; flex-direction:column; gap:9px;">
+            <sc-for list="{{ caseInsights }}" as="ci" hint-placeholder-count="4">
+              <div style="background:#fff; border:1px solid var(--gl-slate-200); border-radius:14px; overflow:hidden;">
+                <button onClick="{{ ci.toggle }}" style="display:flex; align-items:center; gap:12px; width:100%; padding:15px 16px; border:none; background:transparent; cursor:pointer; text-align:left; font-family:var(--font-sans);">
+                  <span style="flex:1; font-size:15px; font-weight:700; color:var(--gl-ink); line-height:1.35;">{{ ci.q }}</span>
+                  <span style="display:inline-flex; color:var(--gl-slate-400); transition:transform .2s; transform:{{ ci.chev }};"><x-import component-from-global-scope="GLIcon" name="ChevronDown" size="19" hint-size="19px,19px"></x-import></span>
+                </button>
+                <sc-if value="{{ ci.open }}"><div style="padding:0 16px 16px 16px;"><p style="margin:0; font-size:14.5px; line-height:1.6; color:var(--gl-slate-600);">{{ ci.a }}</p></div></sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ============ FAQ ============ -->
+      <sc-if value="{{ showFaq }}">
+        <div class="gl-fade">
+          <h1 style="margin:0 0 4px; font-size:26px; font-weight:800; letter-spacing:-0.02em; color:var(--gl-ink);">Frequently Asked Questions</h1>
+          <p style="margin:0 0 14px; font-size:15px; color:var(--gl-slate-600);">Clear, consistent answers you can share with confidence — grouped by topic.</p>
+          <div style="display:flex; align-items:center; gap:10px; background:#fff; border:1px solid var(--gl-slate-200); border-radius:12px; padding:0 12px; height:44px; margin-bottom:18px;">
+            <span style="display:inline-flex; color:var(--gl-slate-400);"><x-import component-from-global-scope="GLIcon" name="Search" size="18" hint-size="18px,18px"></x-import></span>
+            <input value="{{ faqQuery }}" onChange="{{ onFaqQuery }}" placeholder="Search FAQs…" style="flex:1; border:none; outline:none; background:transparent; font-family:var(--font-sans); font-size:14.5px; color:var(--gl-ink); min-width:0;" />
+          </div>
+          <div style="display:flex; flex-direction:column; gap:24px;">
+            <sc-for list="{{ faqGroups }}" as="g" hint-placeholder-count="5">
+              <div>
+                <h2 style="margin:0 0 11px; font-size:13px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:var(--gl-blue);">{{ g.group }}</h2>
+                <div style="display:flex; flex-direction:column; gap:9px;">
+                  <sc-for list="{{ g.items }}" as="q" hint-placeholder-count="3">
+                    <div style="background:#fff; border:1px solid var(--gl-slate-200); border-radius:14px; overflow:hidden;">
+                      <button onClick="{{ q.toggle }}" style="display:flex; align-items:center; gap:12px; width:100%; padding:15px 16px; border:none; background:transparent; cursor:pointer; text-align:left; font-family:var(--font-sans);">
+                        <span style="flex:1; font-size:15px; font-weight:700; color:var(--gl-ink); line-height:1.35;">{{ q.q }}</span>
+                        <span style="display:inline-flex; color:var(--gl-slate-400); transition:transform .2s; transform:{{ q.chev }};"><x-import component-from-global-scope="GLIcon" name="ChevronDown" size="19" hint-size="19px,19px"></x-import></span>
+                      </button>
+                      <sc-if value="{{ q.open }}"><div style="padding:0 16px 16px 16px;"><p style="margin:0; font-size:14.5px; line-height:1.6; color:var(--gl-slate-600);">{{ q.a }}</p></div></sc-if>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ============ RESOURCES ============ -->
+      <sc-if value="{{ showResources }}">
+        <div class="gl-fade">
+          <h1 style="margin:0 0 4px; font-size:26px; font-weight:800; letter-spacing:-0.02em; color:var(--gl-ink);">Resources</h1>
+          <p style="margin:0 0 20px; font-size:15px; color:var(--gl-slate-600);">Everything you need to close sales, in one place.</p>
+
+          <div style="background:var(--gl-navy); border-radius:18px; padding:20px; margin-bottom:24px;">
+            <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.07em; color:#9db4ec; margin-bottom:4px;">Official GlobalLinker links</div>
+            <div style="font-size:12.5px; color:rgba(255,255,255,.6); margin-bottom:13px;">Shared resources for every Growth Partner. Your personalised landing &amp; checkout links are shared with you separately.</div>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <sc-for list="{{ officialLinks }}" as="l" hint-placeholder-count="4">
+                <div style="display:flex; align-items:center; gap:11px; background:rgba(255,255,255,.07); border-radius:12px; padding:12px 14px;">
+                  <span style="display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:9px; flex-shrink:0; background:rgba(255,255,255,.1); color:#fff;"><x-import component-from-global-scope="GLIcon" name="{{ l.icon }}" size="17" hint-size="17px,17px"></x-import></span>
+                  <div style="flex:1; min-width:0;"><div style="font-size:14px; color:#fff; font-weight:700; line-height:1.2;">{{ l.title }}</div><div style="font-size:12px; color:#9db4ec; margin-top:2px;">{{ l.sub }}</div></div>
+                  <button onClick="{{ l.onCopy }}" style="display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:9px; border:none; background:rgba(255,255,255,.1); color:#fff; cursor:pointer; flex-shrink:0;"><x-import component-from-global-scope="GLIcon" name="Copy" size="16" hint-size="16px,16px"></x-import></button>
+                  <button onClick="{{ l.onVisit }}" style="display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:9px; border:none; background:var(--gl-blue); color:#fff; cursor:pointer; flex-shrink:0;"><x-import component-from-global-scope="GLIcon" name="ExternalLink" size="16" hint-size="16px,16px"></x-import></button>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:{{ qaCols }}; gap:13px; margin-bottom:24px;">
+            <sc-for list="{{ resourceCards }}" as="r" hint-placeholder-count="6">
+              <button onClick="{{ r.onClick }}" style="display:flex; align-items:center; gap:14px; text-align:left; background:#fff; border:1px solid var(--gl-slate-200); border-radius:16px; padding:17px; cursor:pointer; transition:box-shadow .15s, transform .15s;" style-hover="box-shadow:var(--shadow-card-hover); transform:translateY(-2px);">
+                <span style="display:inline-flex; align-items:center; justify-content:center; width:46px; height:46px; border-radius:13px; flex-shrink:0; background:{{ r.bg }}; color:{{ r.fg }};"><x-import component-from-global-scope="GLIcon" name="{{ r.icon }}" size="22" hint-size="22px,22px"></x-import></span>
+                <span style="flex:1;"><span style="display:block; font-size:15.5px; font-weight:800; color:var(--gl-ink); letter-spacing:-0.01em;">{{ r.title }}</span><span style="display:block; font-size:13px; color:var(--gl-slate-500); margin-top:2px;">{{ r.sub }}</span></span>
+                <span style="display:inline-flex; color:var(--gl-slate-300);"><x-import component-from-global-scope="GLIcon" name="ChevronRight" size="19" hint-size="19px,19px"></x-import></span>
+              </button>
+            </sc-for>
+          </div>
+
+          <sc-if value="{{ hasSaved }}">
+            <h2 style="margin:0 0 12px; font-size:18px; font-weight:800; color:var(--gl-ink); letter-spacing:-0.01em;">Saved items</h2>
+            <div style="display:flex; flex-direction:column; gap:9px;">
+              <sc-for list="{{ savedItems }}" as="sv" hint-placeholder-count="3">
+                <button onClick="{{ sv.onClick }}" style="display:flex; align-items:center; gap:12px; width:100%; text-align:left; background:#fff; border:1px solid var(--gl-slate-200); border-radius:13px; padding:13px 15px; cursor:pointer;">
+                  <span style="display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:9px; flex-shrink:0; background:var(--gl-orange-50); color:var(--gl-orange);"><x-import component-from-global-scope="GLIcon" name="{{ sv.icon }}" size="17" hint-size="17px,17px"></x-import></span>
+                  <span style="flex:1; min-width:0;"><span style="display:block; font-size:14.5px; font-weight:700; color:var(--gl-ink); line-height:1.25;">{{ sv.title }}</span><span style="display:block; font-size:12px; color:var(--gl-slate-400);">{{ sv.kind }}</span></span>
+                  <span style="display:inline-flex; color:var(--gl-slate-300);"><x-import component-from-global-scope="GLIcon" name="ChevronRight" size="17" hint-size="17px,17px"></x-import></span>
+                </button>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+    </main>
+  </div>
+
+  <!-- ============ MOBILE BOTTOM NAV ============ -->
+  <sc-if value="{{ isMobile }}">
+    <nav style="position:fixed; bottom:0; left:0; right:0; z-index:40; background:#fff; border-top:1px solid var(--gl-slate-200); display:flex; padding:7px 4px calc(7px + env(safe-area-inset-bottom)) 4px; box-shadow:0 -2px 12px rgba(16,24,40,.04);">
+      <sc-for list="{{ bottomItems }}" as="it" hint-placeholder-count="5">
+        <button onClick="{{ it.onClick }}" style="flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; border:none; background:transparent; cursor:pointer; padding:6px 2px; min-height:54px;">
+          <span style="display:inline-flex; color:{{ it.fg }};"><x-import component-from-global-scope="GLIcon" name="{{ it.icon }}" size="22" hint-size="22px,22px"></x-import></span>
+          <span style="font-size:10.5px; font-weight:700; color:{{ it.fg }};">{{ it.label }}</span>
+        </button>
+      </sc-for>
+    </nav>
+  </sc-if>
+
+  <!-- ============ TOAST ============ -->
+  <sc-if value="{{ toast }}">
+    <div style="position:fixed; bottom:{{ toastBottom }}; left:50%; transform:translateX(-50%); z-index:60; background:var(--gl-ink); color:#fff; padding:12px 20px; border-radius:999px; font-size:14px; font-weight:700; box-shadow:var(--shadow-lg); display:flex; align-items:center; gap:9px; animation:glToastIn .25s ease both;">
+      <span style="display:inline-flex; color:var(--gl-success);"><x-import component-from-global-scope="GLIcon" name="CheckCircle2" size="18" hint-size="18px,18px"></x-import></span>{{ toast }}
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;}}">
+class Component extends DCLogic {
+  mainRef = React.createRef();
+
+  state = {
+    view: "home", moduleId: null, query: "",
+    open: {}, favs: {}, checklist: {}, playing: {},
+    wIndustry: "All", wQuery: "", sFilter: "All", mFilter: "All", faqQuery: "",
+    toast: null, copiedId: null,
+    isDesktop: (typeof window !== "undefined" && window.innerWidth >= 1024),
+  };
+
+  calloutTones = {
+    blue:   { bg: "var(--gl-blue-50)",   border: "rgba(19,114,246,.18)",  title: "var(--gl-blue-700)",   text: "var(--gl-slate-700)" },
+    orange: { bg: "var(--gl-orange-50)", border: "rgba(249,112,21,.20)",  title: "var(--gl-orange-700)", text: "var(--gl-slate-700)" },
+    navy:   { bg: "var(--gl-navy)",      border: "var(--gl-navy)",        title: "#9db4ec",              text: "rgba(255,255,255,.8)" },
+    green:  { bg: "var(--gl-success-50)",border: "rgba(22,163,74,.20)",   title: "#15803d",              text: "var(--gl-slate-700)" },
+  };
+  accentMap = {
+    blue:   { bg: "var(--gl-blue-50)",   fg: "var(--gl-blue)" },
+    orange: { bg: "var(--gl-orange-50)", fg: "var(--gl-orange)" },
+  };
+  webGrads = [
+    "linear-gradient(135deg,#1372f6,#0c4ba6)",
+    "linear-gradient(135deg,#f97015,#c14f05)",
+    "linear-gradient(135deg,#021450,#1372f6)",
+    "linear-gradient(135deg,#0ea5a4,#0369a1)",
+    "linear-gradient(135deg,#7c3aed,#1372f6)",
+    "linear-gradient(135deg,#16a34a,#0d9488)",
+  ];
+
+  componentDidMount() {
+    try {
+      const f = JSON.parse(localStorage.getItem("gl_gp_favs") || "{}");
+      const c = JSON.parse(localStorage.getItem("gl_gp_check") || "{}");
+      this.setState({ favs: f, checklist: c });
+    } catch (e) {}
+    this._onResize = () => {
+      const d = window.innerWidth >= 1024;
+      if (d !== this.state.isDesktop) this.setState({ isDesktop: d });
+    };
+    window.addEventListener("resize", this._onResize);
+    // ensure icons render once lucide UMD has loaded
+    let tries = 0;
+    this._iconTimer = setInterval(() => {
+      tries++;
+      if (window.lucide && window.GLIcon) { this.forceUpdate(); clearInterval(this._iconTimer); }
+      if (tries > 40) clearInterval(this._iconTimer);
+    }, 150);
+  }
+  componentWillUnmount() {
+    window.removeEventListener("resize", this._onResize);
+    clearInterval(this._iconTimer);
+    clearTimeout(this._toastTimer);
+  }
+
+  C() { return window.GLContent || { modules: [], scripts: [], messages: [], objections: [], faqs: [], websites: [], quickActions: [], aiDemo: { steps: [], checklist: [] }, PRICE: "" }; }
+
+  nav = (view, moduleId) => {
+    const st = { view, query: "" };
+    if (moduleId) {
+      st.moduleId = moduleId;
+      const mod = this.C().modules.find(m => m.id === moduleId);
+      if (mod && mod.sections[0]) {
+        const open = Object.assign({}, this.state.open);
+        open[mod.sections[0].id] = true;
+        st.open = open;
+      }
+    }
+    this.setState(st);
+    if (this.mainRef.current) this.mainRef.current.scrollTop = 0;
+    try { window.scrollTo(0, 0); } catch (e) {}
+  };
+  toggle = (id) => { const open = Object.assign({}, this.state.open); open[id] = !open[id]; this.setState({ open }); };
+  togglePlay = (key) => { const p = Object.assign({}, this.state.playing); p[key] = true; this.setState({ playing: p }); };
+
+  showToast = (msg) => {
+    this.setState({ toast: msg });
+    clearTimeout(this._toastTimer);
+    this._toastTimer = setTimeout(() => this.setState({ toast: null }), 1900);
+  };
+  copy = (text, id, label) => {
+    const done = () => { this.setState({ copiedId: id }); this.showToast(label || "Copied to clipboard"); clearTimeout(this._copyTimer); this._copyTimer = setTimeout(() => this.setState({ copiedId: null }), 1600); };
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(done).catch(done); }
+      else { const ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); } catch (e) {} document.body.removeChild(ta); done(); }
+    } catch (e) { done(); }
+  };
+  share = (title, text, url) => {
+    const payload = {}; if (title) payload.title = title; if (text) payload.text = text; if (url) payload.url = url;
+    if (navigator.share) { navigator.share(payload).catch(() => {}); }
+    else { this.copy((text || "") + (url ? "\n" + url : ""), "share", "Copied — ready to share"); }
+  };
+  toggleFav = (id) => {
+    const favs = Object.assign({}, this.state.favs); favs[id] = !favs[id]; if (!favs[id]) delete favs[id];
+    this.setState({ favs }); try { localStorage.setItem("gl_gp_favs", JSON.stringify(favs)); } catch (e) {}
+    this.showToast(favs[id] ? "Saved" : "Removed from saved");
+  };
+  toggleCheck = (i) => {
+    const checklist = Object.assign({}, this.state.checklist); checklist[i] = !checklist[i];
+    this.setState({ checklist }); try { localStorage.setItem("gl_gp_check", JSON.stringify(checklist)); } catch (e) {}
+  };
+
+  chev(open) { return open ? "rotate(180deg)" : "rotate(0deg)"; }
+  domainOf(url) { return url.replace(/^https?:\/\//, "").replace(/\/$/, ""); }
+  initialsOf(name) { const parts = name.replace(/[^A-Za-z0-9 ]/g, "").split(/\s+/).filter(Boolean); return ((parts[0] || "")[0] || "") + ((parts[1] || "")[0] || ""); }
+  ytId(url) { const m = url.match(/[?&]v=([^&]+)/) || url.match(/youtu\.be\/([^?]+)/); return m ? m[1] : ""; }
+
+  buildIndex() {
+    if (this._index) return this._index;
+    const C = this.C(); const idx = [];
+    C.modules.forEach(m => {
+      m.sections.forEach(s => {
+        let text = s.title + " ";
+        s.blocks.forEach(b => {
+          if (b.text) text += b.text + " ";
+          if (b.title) text += b.title + " ";
+          if (b.items) b.items.forEach(it => { if (typeof it === "string") text += it + " "; else text += (it.q || "") + " " + (it.a || "") + " " + (it.title || "") + " " + (it.say || "") + " " + (it.plain || "") + " "; });
+          if (b.cols) text += b.cols.join(" ") + " ";
+          if (b.rows) b.rows.forEach(r => text += r.join(" ") + " ");
+        });
+        idx.push({ kind: "Module", icon: m.icon, title: s.title, sub: "Module " + m.n + " · " + m.title, view: "module", moduleId: m.id, sectionId: s.id, text: text.toLowerCase(), chipBg: "var(--gl-blue-50)", chipFg: "var(--gl-blue)" });
+      });
+    });
+    C.scripts.forEach(s => idx.push({ kind: "Script", icon: "MessageCircle", title: s.title, sub: s.channel + " · " + s.stage, snippet: s.body, view: "scripts", text: (s.title + " " + s.body + " " + s.stage + " " + s.channel).toLowerCase(), chipBg: "var(--gl-blue-50)", chipFg: "var(--gl-blue)" }));
+    C.messages.forEach(m => idx.push({ kind: m.type, icon: m.type === "Email" ? "Mail" : "MessageSquare", title: m.title, sub: m.type + " · " + m.stage, snippet: m.body, view: "messages", text: (m.title + " " + m.body + " " + m.stage + " " + (m.subject || "")).toLowerCase(), chipBg: "var(--gl-orange-50)", chipFg: "var(--gl-orange)" }));
+    C.objections.forEach(o => idx.push({ kind: "Objection", icon: "ShieldCheck", title: o.q, sub: "Objection handling", snippet: o.response, view: "objections", objId: o.id, text: (o.q + " " + o.response + " " + (o.why || "")).toLowerCase(), chipBg: "var(--gl-orange-50)", chipFg: "var(--gl-orange)" }));
+    C.faqs.forEach(g => g.items.forEach((q, i) => idx.push({ kind: "FAQ", icon: "HelpCircle", title: q.q, sub: g.group, snippet: q.a, view: "faq", faqId: g.group + "::" + i, text: (q.q + " " + q.a + " " + g.group).toLowerCase(), chipBg: "var(--gl-blue-50)", chipFg: "var(--gl-blue)" })));
+    C.websites.forEach(w => idx.push({ kind: "Website", icon: "Globe", title: w.name, sub: w.industry, snippet: this.domainOf(w.url), view: "websites", url: w.url, text: (w.name + " " + w.industry).toLowerCase(), chipBg: "var(--gl-blue-50)", chipFg: "var(--gl-blue)" }));
+    (C.caseStudies || []).forEach(cs => idx.push({ kind: "Case Study", icon: "Trophy", title: cs.company, sub: cs.industry, snippet: cs.tagline, view: "cases", text: (cs.company + " " + cs.industry + " " + cs.tagline + " " + cs.summary + " " + cs.challenge.join(" ") + " " + cs.results.join(" ")).toLowerCase(), chipBg: "var(--gl-orange-50)", chipFg: "var(--gl-orange)" }));
+    this._index = idx; return idx;
+  }
+
+  resultClick(r) {
+    if (r.view === "module") { this.nav("module", r.moduleId); const open = Object.assign({}, this.state.open); open[r.sectionId] = true; this.setState({ open, query: "" }); }
+    else if (r.view === "objections") { const open = Object.assign({}, this.state.open); if (r.objId) open[r.objId] = true; this.setState({ view: "objections", open, query: "" }); }
+    else if (r.view === "faq") { const open = Object.assign({}, this.state.open); if (r.faqId) open[r.faqId] = true; this.setState({ view: "faq", open, query: "", faqQuery: "" }); }
+    else if (r.view === "websites" && r.url) { this.setState({ view: "websites", query: "", wQuery: r.title, wIndustry: "All" }); }
+    else { this.nav(r.view); }
+    if (this.mainRef.current) this.mainRef.current.scrollTop = 0;
+  }
+
+  navItem(key, label, icon, badge) {
+    const v = this.state.view;
+    let active = v === key;
+    if (key === "modules") active = (v === "modules" || v === "module");
+    const fg = active ? "var(--gl-blue)" : "var(--gl-slate-600)";
+    return {
+      key, label, icon, badge: badge || "",
+      active,
+      bg: active ? "var(--gl-blue-50)" : "transparent",
+      fg, iconColor: active ? "var(--gl-blue)" : "var(--gl-slate-400)",
+      onClick: () => this.nav(key === "modules" ? "modules" : key),
+    };
+  }
+  bottomItem(key, label, icon, activeViews) {
+    const active = activeViews.indexOf(this.state.view) > -1;
+    const target = key;
+    return { key, label, icon, fg: active ? "var(--gl-blue)" : "var(--gl-slate-400)", onClick: () => this.nav(target) };
+  }
+  chip(label, active, onClick) {
+    return { label, onClick, active,
+      bg: active ? "var(--gl-navy)" : "#fff",
+      fg: active ? "#fff" : "var(--gl-slate-600)",
+      border: active ? "var(--gl-navy)" : "var(--gl-slate-200)" };
+  }
+
+  renderVals() {
+    const C = this.C();
+    const s = this.state;
+    const q = s.query.trim().toLowerCase();
+    const hasQuery = q.length > 0;
+    const isDesktop = s.isDesktop;
+    const price = C.PRICE;
+    const officialLinks = (C.officialLinks || []).map(l => ({
+      title: l.title, sub: l.sub, icon: l.icon, url: l.url,
+      onVisit: () => window.open(l.url, "_blank", "noopener"),
+      onCopy: () => this.copy(l.url, l.id, l.title + " link copied"),
+    }));
+
+    // ---- search results ----
+    let results = [];
+    if (hasQuery) {
+      const idx = this.buildIndex();
+      results = idx.filter(e => e.text.indexOf(q) > -1).map(e => {
+        const titleHit = e.title.toLowerCase().indexOf(q) > -1;
+        let snip = e.snippet || e.sub || "";
+        snip = (snip || "").replace(/\s+/g, " ").trim();
+        return Object.assign({}, e, { rank: titleHit ? 0 : 1, snippet: snip, onClick: () => this.resultClick(e) });
+      }).sort((a, b) => a.rank - b.rank).slice(0, 40);
+    }
+
+    // ---- nav ----
+    const sidebarItems = [
+      this.navItem("home", "Home", "Home"),
+      this.navItem("modules", "Modules", "BookOpen", "12"),
+      this.navItem("aidemo", "AI Demonstration", "Bot"),
+      this.navItem("scripts", "Sales Scripts", "MessageCircle", String(C.scripts.length)),
+      this.navItem("websites", "Website Examples", "LayoutTemplate", String(C.websites.length)),
+      this.navItem("cases", "Case Studies", "Trophy", String((C.caseStudies || []).length)),
+      this.navItem("objections", "Objections", "ShieldCheck", String(C.objections.length)),
+      this.navItem("messages", "WhatsApp & Email", "Send"),
+      this.navItem("faq", "FAQ", "HelpCircle"),
+      this.navItem("resources", "Resources", "LayoutGrid"),
+    ];
+    const bottomItems = [
+      this.bottomItem("home", "Home", "Home", ["home"]),
+      this.bottomItem("modules", "Modules", "BookOpen", ["modules", "module"]),
+      this.bottomItem("scripts", "Scripts", "MessageCircle", ["scripts"]),
+      this.bottomItem("resources", "Resources", "LayoutGrid", ["resources", "aidemo", "websites", "objections", "messages", "cases"]),
+      this.bottomItem("faq", "FAQ", "HelpCircle", ["faq"]),
+    ];
+
+    // ---- home ----
+    const quickActions = C.quickActions.map(a => {
+      const ac = this.accentMap[a.accent] || this.accentMap.blue;
+      return { icon: a.icon, title: a.title, sub: a.sub, bg: ac.bg, fg: ac.fg, onClick: () => this.nav(a.view) };
+    });
+    const moduleCard = (m) => {
+      const ac = this.accentMap[m.accent] || this.accentMap.blue;
+      return { n: m.n, title: m.title, tagline: m.tagline, icon: m.icon, read: m.read, count: m.sections.length, bg: ac.bg, fg: ac.fg, onClick: () => this.nav("module", m.id) };
+    };
+    const moduleCards = C.modules.map(moduleCard);
+    const homeModules = C.modules.slice(0, 4).map(moduleCard);
+    const greeting = "Welcome to your Success Center";
+
+    // ---- active module ----
+    let am = null, showModuleDetail = s.view === "module" && s.moduleId;
+    if (showModuleDetail) {
+      const mi = C.modules.findIndex(m => m.id === s.moduleId);
+      const mod = C.modules[mi];
+      if (mod) {
+        const ac = this.accentMap[mod.accent] || this.accentMap.blue;
+        const prev = C.modules[mi - 1] || null;
+        const next = C.modules[mi + 1] || null;
+        am = {
+          n: mod.n, title: mod.title, tagline: mod.tagline, icon: mod.icon, read: mod.read, bg: ac.bg, fg: ac.fg,
+          linkAiDemo: mod.id === "m7", linkCases: mod.id === "m9",
+          hasPrev: !!prev, hasNext: !!next,
+          prevTitle: prev ? prev.title : "", nextTitle: next ? next.title : "",
+          prevN: prev ? prev.n : "", nextN: next ? next.n : "",
+          goPrev: prev ? () => this.nav("module", prev.id) : () => {},
+          goNext: next ? () => this.nav("module", next.id) : () => {},
+          sections: mod.sections.map((sec, si) => {
+            const open = (s.open[sec.id] !== undefined) ? s.open[sec.id] : (si === 0);
+            return {
+              id: sec.id, title: sec.title, open, chev: this.chev(open), toggle: () => this.toggle(sec.id),
+              blocks: sec.blocks.map(b => this.augBlock(b)),
+            };
+          }),
+        };
+      } else { showModuleDetail = false; }
+    }
+
+    // ---- AI demo ----
+    const ad = C.aiDemo;
+    const aiSteps = ad.steps.map((st, i) => {
+      const key = "ai-" + st.n;
+      const open = (s.open[key] !== undefined) ? s.open[key] : (i === 0);
+      return {
+        n: st.n, title: st.title, sub: st.sub, detail: st.detail, examples: st.examples, ask: st.ask,
+        open, chev: this.chev(open), toggle: () => this.toggle(key),
+        hasTools: (st.tools || []).length > 0,
+        tools: (st.tools || []).map(t => ({ label: t.label, icon: t.icon, onClick: () => window.open(t.url, "_blank", "noopener") })),
+      };
+    });
+    const aiChecklist = ad.checklist.map((label, i) => {
+      const done = !!s.checklist[i];
+      return { label, done, toggle: () => this.toggleCheck(i),
+        boxBg: done ? "var(--gl-success)" : "transparent", boxBorder: done ? "var(--gl-success)" : "var(--gl-slate-300)",
+        textColor: done ? "var(--gl-slate-400)" : "var(--gl-slate-700)", strike: done ? "line-through" : "none" };
+    });
+    const checkDone = ad.checklist.filter((_, i) => s.checklist[i]).length;
+
+    // ---- scripts ----
+    const sStages = ["All"].concat(this.unique(C.scripts.map(x => x.stage)));
+    const scriptFilters = sStages.map(st => this.chip(st, s.sFilter === st, () => this.setState({ sFilter: st })));
+    const scriptCards = C.scripts.filter(x => s.sFilter === "All" || x.stage === s.sFilter).map(x => this.scriptCard(x));
+
+    // ---- messages ----
+    const mTypes = ["All", "WhatsApp", "Email"];
+    const msgFilters = mTypes.map(t => this.chip(t, s.mFilter === t, () => this.setState({ mFilter: t })));
+    const messageCards = C.messages.filter(x => s.mFilter === "All" || x.type === s.mFilter).map(x => this.messageCard(x));
+
+    // ---- objections ----
+    const objectionCards = C.objections.map(o => {
+      const open = !!s.open[o.id];
+      const fav = !!s.favs[o.id];
+      const copied = s.copiedId === o.id;
+      return {
+        q: o.q, response: o.response, why: o.why, never: o.never || "", warn: o.warn || "",
+        open, chev: this.chev(open), toggle: () => this.toggle(o.id),
+        onCopy: () => this.copy(o.response, o.id, "Response copied"), copyIcon: copied ? "Check" : "Copy", copyLabel: copied ? "Copied" : "Copy response",
+        onShare: () => this.share(o.q, o.response), onFav: () => this.toggleFav(o.id),
+        favIcon: fav ? "Star" : "Star", favBg: fav ? "var(--gl-orange)" : "var(--gl-slate-100)", favFg: fav ? "#fff" : "var(--gl-slate-400)",
+      };
+    });
+
+    // ---- websites ----
+    const wIndustries = ["All"].concat(this.unique(C.websites.map(w => w.industry)));
+    const industryFilters = wIndustries.map(ind => {
+      const c = this.chip(ind, s.wIndustry === ind, () => this.setState({ wIndustry: ind }));
+      c.count = ind === "All" ? C.websites.length : C.websites.filter(w => w.industry === ind).length;
+      return c;
+    });
+    const wq = s.wQuery.trim().toLowerCase();
+    const websiteCards = C.websites
+      .filter(w => (s.wIndustry === "All" || w.industry === s.wIndustry) && (!wq || w.name.toLowerCase().indexOf(wq) > -1))
+      .map((w, i) => ({
+        name: w.name, industry: w.industry, domain: this.domainOf(w.url), initials: this.initialsOf(w.name).toUpperCase(),
+        grad: this.webGrads[(w.name.charCodeAt(0) + w.name.length) % this.webGrads.length],
+        onVisit: () => window.open(w.url, "_blank", "noopener"),
+        onShare: () => this.share(w.name, "Take a look at this GlobalLinker business website: " + w.name, w.url),
+      }));
+
+    // ---- faq ----
+    const fq = s.faqQuery.trim().toLowerCase();
+    const faqGroups = C.faqs.map(g => {
+      const items = g.items.map((it, i) => {
+        const key = g.group + "::" + i; const open = !!s.open[key];
+        return { q: it.q, a: it.a, open, chev: this.chev(open), toggle: () => this.toggle(key) };
+      }).filter(it => !fq || (it.q.toLowerCase().indexOf(fq) > -1 || it.a.toLowerCase().indexOf(fq) > -1));
+      return { group: g.group, items };
+    }).filter(g => g.items.length > 0);
+
+    // ---- case studies ----
+    const caseStudies = (C.caseStudies || []).map(cs => ({
+      n: cs.n, company: cs.company, industry: cs.industry, tagline: cs.tagline, summary: cs.summary,
+      metric: cs.metric, metricLabel: cs.metricLabel,
+      challengeTitle: cs.challengeTitle, challengeNote: cs.challengeNote, challenge: cs.challenge,
+      strategy: cs.strategy, results: cs.results,
+      impact: cs.impact.map((r, i) => ({ component: r[0], legacy: r[1], post: r[2] })),
+      onVisit: () => window.open(cs.url, "_blank", "noopener"),
+    }));
+    const caseInsights = (C.caseInsights || []).map((it, i) => {
+      const key = "cs-faq-" + i; const open = !!s.open[key];
+      return { q: it.q, a: it.a, open, chev: this.chev(open), toggle: () => this.toggle(key) };
+    });
+
+    // ---- resources ----
+    const resourceCards = [
+      { icon: "Bot", title: "AI Demonstration", sub: "The live 6-step walkthrough", view: "aidemo", accent: "orange" },
+      { icon: "MessageCircle", title: "Sales Scripts", sub: C.scripts.length + " conversation starters", view: "scripts", accent: "blue" },
+      { icon: "ShieldCheck", title: "Objection Library", sub: C.objections.length + " ready responses", view: "objections", accent: "orange" },
+      { icon: "LayoutTemplate", title: "Website Examples", sub: C.websites.length + " real businesses", view: "websites", accent: "blue" },
+      { icon: "Trophy", title: "Case Studies", sub: (C.caseStudies || []).length + " real transformations", view: "cases", accent: "orange" },
+      { icon: "Send", title: "WhatsApp & Email", sub: C.messages.length + " follow-up templates", view: "messages", accent: "blue" },
+      { icon: "HelpCircle", title: "FAQ", sub: "Answers by topic", view: "faq", accent: "blue" },
+    ].map(r => { const ac = this.accentMap[r.accent]; return { icon: r.icon, title: r.title, sub: r.sub, bg: ac.bg, fg: ac.fg, onClick: () => this.nav(r.view) }; });
+
+    // saved items
+    const savedItems = [];
+    C.scripts.forEach(x => { if (s.favs[x.id]) savedItems.push({ icon: "MessageCircle", title: x.title, kind: "Script", onClick: () => this.nav("scripts") }); });
+    C.messages.forEach(x => { if (s.favs[x.id]) savedItems.push({ icon: x.type === "Email" ? "Mail" : "MessageSquare", title: x.title, kind: x.type, onClick: () => this.nav("messages") }); });
+    C.objections.forEach(o => { if (s.favs[o.id]) savedItems.push({ icon: "ShieldCheck", title: o.q, kind: "Objection", onClick: () => { const open = Object.assign({}, this.state.open); open[o.id] = true; this.setState({ view: "objections", open }); } }); });
+
+    // grid columns
+    const qaCols = isDesktop ? "repeat(3, 1fr)" : "repeat(2, 1fr)";
+    const moduleCols = isDesktop ? "repeat(2, 1fr)" : "1fr";
+    const moduleGridCols = isDesktop ? "repeat(3, 1fr)" : "repeat(2, 1fr)";
+    const cardCols = isDesktop ? "repeat(2, 1fr)" : "1fr";
+    const webCols = isDesktop ? "repeat(3, 1fr)" : "repeat(2, 1fr)";
+
+    return {
+      isDesktop, isMobile: !isDesktop, price, query: s.query, hasQuery,
+      onQuery: (e) => this.setState({ query: e.target.value }),
+      clearQuery: () => this.setState({ query: "" }),
+      sidebarItems, bottomItems,
+      results, noResults: hasQuery && results.length === 0,
+      resultLabel: hasQuery ? (results.length + " result" + (results.length === 1 ? "" : "s") + " for “" + s.query.trim() + "”") : "",
+
+      showHome: s.view === "home" && !hasQuery,
+      showModules: s.view === "modules" && !hasQuery,
+      showModuleDetail: showModuleDetail && !hasQuery,
+      showAidemo: s.view === "aidemo" && !hasQuery,
+      showScripts: s.view === "scripts" && !hasQuery,
+      showMessages: s.view === "messages" && !hasQuery,
+      showObjections: s.view === "objections" && !hasQuery,
+      showWebsites: s.view === "websites" && !hasQuery,
+      showFaq: s.view === "faq" && !hasQuery,
+      showCases: s.view === "cases" && !hasQuery,
+      showResources: s.view === "resources" && !hasQuery,
+      caseStudies, caseInsights, goCases: () => this.nav("cases"),
+      officialLinks,
+
+      greeting, quickActions, homeModules, moduleCards, goModules: () => this.nav("modules"), goAidemo: () => this.nav("aidemo"),
+      heroSize: isDesktop ? "34px" : "27px", qaCols, moduleCols, moduleGridCols, cardCols, webCols,
+      am,
+      aiIntro: ad.intro, aiSteps, aiChecklist, checkDone, checkTotal: ad.checklist.length,
+      scriptFilters, scriptCards, msgFilters, messageCards, objectionCards,
+      industryFilters, websiteCards, wQuery: s.wQuery, onWQuery: (e) => this.setState({ wQuery: e.target.value }),
+      faqGroups, faqQuery: s.faqQuery, onFaqQuery: (e) => this.setState({ faqQuery: e.target.value }),
+      resourceCards, savedItems, hasSaved: savedItems.length > 0,
+      mainRef: this.mainRef, namePlaceholder: "{{Name}}",
+      toast: s.toast, toastBottom: isDesktop ? "28px" : "84px",
+    };
+  }
+
+  unique(arr) { const out = []; arr.forEach(x => { if (out.indexOf(x) < 0) out.push(x); }); return out; }
+
+  scriptCard(x) {
+    const fav = !!this.state.favs[x.id]; const copied = this.state.copiedId === x.id;
+    return { title: x.title, channel: x.channel, stage: x.stage, body: x.body,
+      onCopy: () => this.copy(x.body, x.id, "Script copied"), copyIcon: copied ? "Check" : "Copy", copyLabel: copied ? "Copied" : "Copy script",
+      onShare: () => this.share(x.title, x.body), onFav: () => this.toggleFav(x.id),
+      favIcon: "Star", favBg: fav ? "var(--gl-orange)" : "var(--gl-slate-100)", favFg: fav ? "#fff" : "var(--gl-slate-400)" };
+  }
+  messageCard(x) {
+    const fav = !!this.state.favs[x.id]; const copied = this.state.copiedId === x.id;
+    const wa = x.type === "WhatsApp";
+    return { title: x.title, type: x.type, stage: x.stage, body: x.body, subject: x.subject || "",
+      chanIcon: wa ? "MessageSquare" : "Mail", chanBg: wa ? "var(--gl-success-50)" : "var(--gl-blue-50)", chanFg: wa ? "var(--gl-success)" : "var(--gl-blue)",
+      onCopy: () => this.copy((x.subject ? "Subject: " + x.subject + "\n\n" : "") + x.body, x.id, "Message copied"), copyIcon: copied ? "Check" : "Copy", copyLabel: copied ? "Copied" : "Copy message",
+      onShare: () => this.share(x.title, x.body), onFav: () => this.toggleFav(x.id),
+      favIcon: "Star", favBg: fav ? "var(--gl-orange)" : "var(--gl-slate-100)", favFg: fav ? "#fff" : "var(--gl-slate-400)" };
+  }
+  augBlock(b) {
+    const t = b.t;
+    const out = { t, isP: t === "p", isLead: t === "lead", isUl: t === "ul", isOk: t === "ok", isNo: t === "no",
+      isFlow: t === "flow", isSteps: t === "steps", isCallout: t === "callout", isTable: t === "table",
+      isVideo: t === "video", isQa: t === "qa", isSwap: t === "swap",
+      text: b.text || "", title: b.title || "", items: b.items || [] };
+    if (t === "callout") { const c = this.calloutTones[b.tone] || this.calloutTones.blue; out.cBg = c.bg; out.cBorder = c.border; out.cTitle = c.title; out.cText = c.text; }
+    if (t === "flow") { out.items = b.items.map((f, i) => ({ title: f.title, notLast: i < b.items.length - 1 })); }
+    if (t === "table") { out.cols = b.cols; out.trows = b.rows.map((r, i) => ({ cells: r, bg: i % 2 ? "var(--gl-blue-50)" : "#fff" })); }
+    if (t === "video") {
+      const id = this.ytId(b.url); const playing = !!this.state.playing[b.url];
+      out.desc = b.desc;
+      const thumb = "https://i.ytimg.com/vi/" + id + "/hqdefault.jpg";
+      const embed = "https://www.youtube.com/embed/" + id + "?autoplay=1&rel=0";
+      out.media = playing
+        ? React.createElement("div", { style: { position: "relative", width: "100%", paddingTop: "56.25%", background: "#000" } },
+            React.createElement("iframe", { src: embed, allow: "autoplay; encrypted-media", allowFullScreen: true, style: { position: "absolute", inset: 0, width: "100%", height: "100%", border: 0 } }))
+        : React.createElement("button", { onClick: () => this.togglePlay(b.url), style: { position: "relative", display: "block", width: "100%", padding: 0, border: "none", cursor: "pointer", background: "#000" } },
+            React.createElement("img", { src: thumb, alt: "", style: { display: "block", width: "100%", aspectRatio: "16/9", objectFit: "cover", opacity: 0.82 } }),
+            React.createElement("span", { style: { position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" } },
+              React.createElement("span", { style: { display: "inline-flex", alignItems: "center", justifyContent: "center", width: 66, height: 66, borderRadius: 999, background: "rgba(255,255,255,.92)", boxShadow: "0 6px 20px rgba(0,0,0,.3)", color: "var(--gl-orange)", fontSize: 26, paddingLeft: 5 } }, "\u25B6")));
+    }
+    return out;
+  }
+}
+</script>
+</body>
+</html>
