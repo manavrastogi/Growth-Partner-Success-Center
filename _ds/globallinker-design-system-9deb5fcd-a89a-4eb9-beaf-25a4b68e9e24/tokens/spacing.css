@@ -1,0 +1,37 @@
+/* ============================================================
+   GlobalLinker — Spacing & Layout Tokens
+   COMPACT philosophy: tight real estate, no sprawling gaps.
+   ============================================================ */
+:root {
+  /* ---- Spacing scale (4px base) ---- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;   /* Standard section py */
+  --space-16: 64px;   /* MAX hero section py */
+
+  /* ---- Section rhythm (tight determinism) ---- */
+  --section-py: 48px;        /* py-12 — standard sections */
+  --section-py-hero: 64px;   /* py-16 — hero MAX */
+  --section-gap: 16px;       /* gap between grid cards */
+
+  /* ---- Container ---- */
+  --container-max: 1200px;
+  --container-pad: 24px;
+
+  /* ---- Radii ---- */
+  --radius-sm: 6px;
+  --radius-md: 10px;    /* Default cards, inputs */
+  --radius-lg: 14px;    /* Feature cards, panels */
+  --radius-xl: 20px;    /* Hero panels */
+  --radius-pill: 999px; /* Badges, micro-chips */
+
+  /* ---- Border widths ---- */
+  --bw-hairline: 1px;   /* Ultra-thin card borders @kind spacing */
+  --bw-emphasis: 2px;   /* @kind spacing */
+}
